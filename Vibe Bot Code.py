@@ -369,3 +369,4 @@ async def viewq(ctx):
         await ctx.send(f'Your queue is now `{queue2}!`')
     except:
         await ctx.send("You have no queue initialized, so your queue is empty!")
+        
