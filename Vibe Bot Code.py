@@ -382,10 +382,10 @@ async def viewq(ctx):
 @bot.command(name = "clearq", help = " - Stop the current song/video being played and clears the queue (RESTRICTED).")
 @commands.check(check_if_me)
 async def clearq(ctx):
-    i = 0
     queue.clear()
     queue2.clear()
-
+    await ctx.send("Queue cleared.")
+    
     voice = discord.utils.get(bot.voice_clients,guild=ctx.guild)
     voice.stop()
     await ctx.send("Song/video stopped.")
