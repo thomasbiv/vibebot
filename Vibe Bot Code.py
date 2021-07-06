@@ -101,10 +101,10 @@ async def _8ball(ctx, *, question):
 async def devs(ctx):
     await ctx.send("DEVS: Thomas Bivins")
 
-@bot.command(name = "clear", help = " - Clear the last specified amount of messages.")
+@bot.command(name = "purge", help = " - Purges (clears) the last specified amount of messages.")
 @commands.has_role('Vibe Master')
 @commands.has_permissions(manage_messages = True)
-async def clear(ctx, amount = 5):
+async def purge(ctx, amount = 5):
     await ctx.channel.purge(limit = amount)
 
 @bot.command(name = "youtube", help = " - Search for a YouTube video!")
@@ -212,7 +212,17 @@ async def resume(ctx):
 
 
 
-@bot.command(pass_context = True, name = "stop", help = " - Stop the current song/video that is playing in the voice channel.")
+@bot.command(pass_context = True, name = "skipq", help = " - Stop the current song/video and play the next song in the queue (RESTRICTED).")
+@commands.check(check_if_me)
+async def skipq(ctx):
+    voice = discord.utils.get(bot.voice_clients,guild=ctx.guild)
+    voice.stop()
+    await ctx.send("Song/video skipped.")
+    #await ctx.guild.voice_client.disconnect()
+    #await ctx.send("I have left the voice channel.")
+    
+
+@bot.command(pass_context = True, name = "stop", help = " - Stop the current song/video.")
 @commands.has_role('Vibe Master')
 async def stop(ctx):
     voice = discord.utils.get(bot.voice_clients,guild=ctx.guild)
@@ -220,7 +230,6 @@ async def stop(ctx):
     await ctx.send("Song/video stopped.")
     await ctx.guild.voice_client.disconnect()
     await ctx.send("I have left the voice channel.")
-
 
 
 @bot.command(name = "play", help = " - Play audio off of YouTube using keywords.")
@@ -369,4 +378,16 @@ async def viewq(ctx):
         await ctx.send(f'Your queue is now `{queue2}!`')
     except:
         await ctx.send("You have no queue initialized, so your queue is empty!")
-        
+
+@bot.command(name = "clearq", help = " - Stop the current song/video being played and clears the queue (RESTRICTED).")
+@commands.check(check_if_me)
+async def clearq(ctx):
+    i = 0
+    queue.clear()
+    queue2.clear()
+
+    voice = discord.utils.get(bot.voice_clients,guild=ctx.guild)
+    voice.stop()
+    await ctx.send("Song/video stopped.")
+    await ctx.guild.voice_client.disconnect()
+    await ctx.send("I have left the voice channel.")
