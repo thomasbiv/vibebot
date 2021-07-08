@@ -102,7 +102,7 @@ async def devs(ctx):
     await ctx.send("DEVS: Thomas Bivins")
 
 @bot.command(name = "purge", help = " - Purges (clears) the last specified amount of messages.")
-@commands.has_role('Vibe Master')
+@commands.has_role('Janitor')
 @commands.has_permissions(manage_messages = True)
 async def purge(ctx, amount = 5):
     await ctx.channel.purge(limit = amount)
@@ -121,7 +121,7 @@ async def youtube(ctx, *, search):
 
 
 #@bot.command(name = "join", help = " - Have Vibe Bot join your voice channel")
-@bot.command(pass_context = True, name = "join", help = " - Have Vibe Bot join your voice channel (RESTRICTED)." )
+@bot.command(pass_context = True, name = "join", help = " - Have Vibe Bot join your voice channel (TESTING)." )
 @commands.check(check_if_me)
 async def join(ctx):
     connected = ctx.author.voice
@@ -133,7 +133,7 @@ async def join(ctx):
         await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
 #@bot.command(name = "leave", help = " - Have Vibe Bot leave your voice channel")
-@bot.command(pass_context = True, name = "leave", help = " - Have Vibe Bot leave your voice channel (RESTRICTED)." )
+@bot.command(pass_context = True, name = "leave", help = " - Have Vibe Bot leave your voice channel (TESTING)." )
 @commands.check(check_if_me)
 async def leave(ctx):
     if (ctx.voice_client):
@@ -142,7 +142,7 @@ async def leave(ctx):
     else:
         await ctx.send("I am not in a voice channel.")
         
-
+"""
 @bot.command(name = "playlink", help = " - Play audio off of YouTube using a link.")
 @commands.has_role('Vibe Master')
 async def playlink(ctx, url:str):
@@ -188,7 +188,7 @@ async def playlink(ctx, url:str):
 
     else:
         await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
-
+"""
 
 @bot.command(pass_context = True, name = "pause", help = " - Pause the current song/video being played in a voice channel.")
 @commands.has_role('Vibe Master')
@@ -209,29 +209,19 @@ async def resume(ctx):
         await ctx.send("Song/video resumed.")
     else:
         await ctx.send("There is currently no song/video that is paused.")
+    
 
-
-
-@bot.command(pass_context = True, name = "skipq", help = " - Stop the current song/video and play the next song in the queue (RESTRICTED).")
-@commands.check(check_if_me)
+@bot.command(pass_context = True, name = "skipq", help = " - Stop the current song/video and play the next song in the queue. ")
+@commands.has_role('Vibe Master')
 async def skipq(ctx):
     voice = discord.utils.get(bot.voice_clients,guild=ctx.guild)
     voice.stop()
     await ctx.send("Song/video skipped.")
-    #await ctx.guild.voice_client.disconnect()
-    #await ctx.send("I have left the voice channel.")
-    
+    if len(queue) == 0:
+        await ctx.guild.voice_client.disconnect()
+        await ctx.send("I have left the voice channel.")
 
-@bot.command(pass_context = True, name = "stop", help = " - Stop the current song/video.")
-@commands.has_role('Vibe Master')
-async def stop(ctx):
-    voice = discord.utils.get(bot.voice_clients,guild=ctx.guild)
-    voice.stop()
-    await ctx.send("Song/video stopped.")
-    await ctx.guild.voice_client.disconnect()
-    await ctx.send("I have left the voice channel.")
-
-
+"""
 @bot.command(name = "play", help = " - Play audio off of YouTube using keywords.")
 @commands.has_role('Vibe Master')
 async def play(ctx, *, search):
@@ -287,9 +277,10 @@ async def play(ctx, *, search):
 
     else:
         await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
+"""
 
-@bot.command(name = "enq", help = " - Add audio from YouTube to the queue (RESTRICTED).")
-@commands.check(check_if_me)
+@bot.command(name = "enq", help = " - Add audio from YouTube to the queue.")
+@commands.has_role('Vibe Master')
 async def enq(ctx, *, search):
 
     query_string = urllib.parse.urlencode({
@@ -306,8 +297,8 @@ async def enq(ctx, *, search):
     queue2.append(search)
     await ctx.send("Selection added to queue!")
 
-@bot.command(name = "delq", help = " - Delete the specified selection in the queue (RESTRICTED).")
-@commands.check(check_if_me)
+@bot.command(name = "delq", help = " - Delete the specified selection in the queue.")
+@commands.has_role('Vibe Master')
 async def delq(ctx, number):
 
     try:
@@ -317,7 +308,7 @@ async def delq(ctx, number):
     except:
         await ctx.send("The queue is either empty or the specified selection is out of range.")
         await ctx.send("Current queue size: " + queue.qsize())
-
+"""
 @bot.command(name = "playq", help = " - Play audio from the queue (RESTRICTED).")
 @commands.check(check_if_me)
 async def playq(ctx):
@@ -370,18 +361,20 @@ async def playq(ctx):
             await temp.callback(ctx)
     else:
         await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
+"""
     
-@bot.command(name = "viewq", help = " - View the current selections in the queue (RESTRICTED).")
-@commands.check(check_if_me)
+@bot.command(name = "viewq", help = " - View the current selections in the queue.")
+@commands.has_role('Vibe Master')
 async def viewq(ctx):
     try:
         await ctx.send(f'Your queue is now `{queue2}!`')
+        #await ctx.send(f'Your queue is now `{queue}!`')
     except:
         await ctx.send("You have no queue initialized, so your queue is empty!")
 
-@bot.command(name = "clearq", help = " - Stop the current song/video being played and clears the queue (RESTRICTED).")
-@commands.check(check_if_me)
-async def clearq(ctx):
+@bot.command(name = "clear", help = " - Stop the current song/video being played and clears the queue.")
+@commands.has_role('Vibe Master')
+async def clear(ctx):
     queue.clear()
     queue2.clear()
     await ctx.send("Queue cleared.")
@@ -391,3 +384,126 @@ async def clearq(ctx):
     await ctx.send("Song/video stopped.")
     await ctx.guild.voice_client.disconnect()
     await ctx.send("I have left the voice channel.")
+
+@bot.command(name = "playlink", help = " - Play audio off of YouTube using a link (TESTING: DOES NOT ADD TO QUEUE).")
+@commands.check(check_if_me)
+async def playlink(ctx, url:str):
+    if (ctx.author.voice):
+        if not (ctx.voice_client):
+            channel = ctx.message.author.voice.channel
+            voice = await channel.connect()
+        else:
+            ctx.voice_client.stop()
+            voice = ctx.guild.voice_client
+        FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
+        YDL_OPTIONS = {'format': "bestaudio"}
+        #voice = ctx.voice_client
+
+        with youtube_dl.YoutubeDL(YDL_OPTIONS) as ydl:
+            info = ydl.extract_info(url, download=False)
+            url2 = info['formats'][0]['url']
+            source = await discord.FFmpegOpusAudio.from_probe(url2, **FFMPEG_OPTIONS)
+            voice.play(source)
+        await ctx.send('Now Playing! :notes: ' + url) #Return first search result
+        while voice.is_playing() or voice.is_paused():
+            await sleep(1)
+        if len(queue) != 0:
+            temp = bot.get_command(name = 'playq')
+            await temp.callback(ctx)
+        else:
+            await voice.disconnect()
+    else:
+        await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
+
+@bot.command(name = "play", help = " - Play audio off of YouTube using keywords. Also adds to queue.")
+@commands.has_role('Vibe Master')
+async def play(ctx, *, search):
+    query_string = urllib.parse.urlencode({
+        'search_query': search
+    })
+    htm_content = urllib.request.urlopen(
+        'http://www.youtube.com/results?' + query_string
+    )
+    search_results = re.findall(r"watch\?v=(\S{11})", htm_content.read().decode())
+    #await ctx.send('Now Playing! :notes: http://www.youtube.com/watch?v=' + search_results[0]) #Return first search result
+    url = 'http://www.youtube.com/watch?v=' + search_results[0]
+    if (ctx.author.voice):
+        if not (ctx.voice_client):
+            channel = ctx.message.author.voice.channel
+            voice = await channel.connect()
+            queue.append(url)
+            queue2.append(search)
+            await ctx.send('Selection added to queue!')
+            temp = bot.get_command(name = 'playq')
+            await temp.callback(ctx)
+        else:
+            #ctx.voice_client.stop()
+            voice = ctx.guild.voice_client
+            if voice.is_playing() or voice.is_paused():
+                queue.append(url)
+                queue2.append(search)
+                await ctx.send('Selection added to queue!')
+            else:
+                queue.append(url)
+                queue2.append(search)
+                await ctx.send('Selection added to queue!')
+                temp = bot.get_command(name = 'playq')
+                await temp.callback(ctx)
+        """        
+        FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
+        YDL_OPTIONS = {'format': "bestaudio"}
+        #voice = ctx.voice_client
+
+        with youtube_dl.YoutubeDL(YDL_OPTIONS) as ydl:
+            info = ydl.extract_info(url, download=False)
+            url2 = info['formats'][0]['url']
+            source = await discord.FFmpegOpusAudio.from_probe(url2, **FFMPEG_OPTIONS)
+            voice.play(source)
+        await ctx.send('Now Playing! :notes: http://www.youtube.com/watch?v=' + search_results[0]) #Return first search result
+        while voice.is_playing() or voice.is_paused():
+            await sleep(1)
+        del(queue[int(number)])
+        del(queue2[int(number)])
+        if len(queue) != 0:
+            temp = bot.get_command(name = 'playq')
+            await temp.callback(ctx)
+        else:
+            await voice.disconnect()
+        """
+    else:
+        await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
+        
+
+@bot.command(name = "playq", help = " - Play a song/video from the queue.")
+@commands.has_role('Vibe Master')
+async def playq(ctx):
+    if (ctx.author.voice):
+        if not (ctx.voice_client):
+            channel = ctx.message.author.voice.channel
+            voice = await channel.connect()
+        else:
+            ctx.voice_client.stop()
+            voice = ctx.guild.voice_client
+        FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
+        YDL_OPTIONS = {'format': "bestaudio"}
+        #voice = ctx.voice_client
+
+        with youtube_dl.YoutubeDL(YDL_OPTIONS) as ydl:
+            info = ydl.extract_info(queue[0], download=False)
+            url2 = info['formats'][0]['url']
+            source = await discord.FFmpegOpusAudio.from_probe(url2, **FFMPEG_OPTIONS)
+            voice.play(source)
+        await ctx.send('Now Playing! :notes: ' + queue[0]) #Return first search result
+        while voice.is_playing() or voice.is_paused():
+            await sleep(1)
+        del(queue[int(0)])
+        del(queue2[int(0)])
+        if len(queue) != 0:
+            temp = bot.get_command(name = 'playq')
+            await temp.callback(ctx)
+        else:
+            await voice.disconnect()
+            await ctx.send("I have left the voice channel.")
+    else:
+        await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
+    
