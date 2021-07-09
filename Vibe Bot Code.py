@@ -9,11 +9,11 @@ import youtube_dl
 import json
 import os
 import queue
+import copy
 
 client = discord.Client()
 bot = commands.Bot(command_prefix ='$')
 
-queue = []
 queue2 = []
 
 @bot.event
@@ -217,7 +217,7 @@ async def skipq(ctx):
     voice = discord.utils.get(bot.voice_clients,guild=ctx.guild)
     voice.stop()
     await ctx.send("Song/video skipped.")
-    if len(queue) == 0:
+    if len(queue2) == 0:
         await ctx.guild.voice_client.disconnect()
         await ctx.send("I have left the voice channel.")
 
@@ -289,12 +289,17 @@ async def enq(ctx, *, search):
     htm_content = urllib.request.urlopen(
         'http://www.youtube.com/results?' + query_string
     )
-    #await ctx.send("Test")
     search_results = re.findall(r"watch\?v=(\S{11})", htm_content.read().decode())
     link = 'http://www.youtube.com/watch?v=' + search_results[0]
-    #await ctx.send("Test")
-    queue.append(link)
-    queue2.append(search)
+
+    ydl_opts = {
+        'quiet': True,
+        'skip_download': True,
+        }
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        info = ydl.extract_info(link)
+
+    queue2.append(info['title'])
     await ctx.send("Selection added to queue!")
 
 @bot.command(name = "delq", help = " - Delete the specified selection in the queue.")
@@ -302,12 +307,10 @@ async def enq(ctx, *, search):
 async def delq(ctx, number):
 
     try:
-        del(queue[int(number)])
         del(queue2[int(number)])
         await ctx.send(f'Your queue is now `{queue2}!`')
     except:
         await ctx.send("The queue is either empty or the specified selection is out of range.")
-        await ctx.send("Current queue size: " + queue.qsize())
 """
 @bot.command(name = "playq", help = " - Play audio from the queue (RESTRICTED).")
 @commands.check(check_if_me)
@@ -368,14 +371,13 @@ async def playq(ctx):
 async def viewq(ctx):
     try:
         await ctx.send(f'Your queue is now `{queue2}!`')
-        #await ctx.send(f'Your queue is now `{queue}!`')
     except:
         await ctx.send("You have no queue initialized, so your queue is empty!")
 
 @bot.command(name = "clear", help = " - Stop the current song/video being played and clears the queue.")
 @commands.has_role('Vibe Master')
 async def clear(ctx):
-    queue.clear()
+    #queue.clear()
     queue2.clear()
     await ctx.send("Queue cleared.")
     
@@ -385,15 +387,13 @@ async def clear(ctx):
     await ctx.guild.voice_client.disconnect()
     await ctx.send("I have left the voice channel.")
 
-@bot.command(name = "playlink", help = " - Play audio off of YouTube using a link.")
+@bot.command(name = "playlink", help = " - Play audio off of YouTube using a link. Also adds to queue.")
 @commands.has_role('Vibe Master')
 async def playlink(ctx, url:str):
     if (ctx.author.voice):
         if not (ctx.voice_client):
             channel = ctx.message.author.voice.channel
             voice = await channel.connect()
-            queue.append(url)
-
             ydl_opts = {
                 'quiet': True,
                 'skip_download': True,
@@ -410,8 +410,6 @@ async def playlink(ctx, url:str):
             #ctx.voice_client.stop()
             voice = ctx.guild.voice_client
             if voice.is_playing() or voice.is_paused():
-                queue.append(url)
-
                 ydl_opts = {
                     'quiet': True,
                     'skip_download': True,
@@ -422,8 +420,6 @@ async def playlink(ctx, url:str):
                 queue2.append(info['title'])
                 await ctx.send('Selection added to queue!')
             else:
-                queue.append(url)
-
                 ydl_opts = {
                     'quiet': True,
                     'skip_download': True,
@@ -467,14 +463,11 @@ async def play(ctx, *, search):
         'http://www.youtube.com/results?' + query_string
     )
     search_results = re.findall(r"watch\?v=(\S{11})", htm_content.read().decode())
-    #await ctx.send('Now Playing! :notes: http://www.youtube.com/watch?v=' + search_results[0]) #Return first search result
     url = 'http://www.youtube.com/watch?v=' + search_results[0]
     if (ctx.author.voice):
         if not (ctx.voice_client):
             channel = ctx.message.author.voice.channel
             voice = await channel.connect()
-            queue.append(url)
-
             ydl_opts = {
                 'quiet': True,
                 'skip_download': True,
@@ -490,8 +483,6 @@ async def play(ctx, *, search):
             #ctx.voice_client.stop()
             voice = ctx.guild.voice_client
             if voice.is_playing() or voice.is_paused():
-                queue.append(url)
-
                 ydl_opts = {
                     'quiet': True,
                     'skip_download': True,
@@ -502,8 +493,6 @@ async def play(ctx, *, search):
                 queue2.append(info['title'])
                 await ctx.send('Selection added to queue!')
             else:
-                queue.append(url)
-
                 ydl_opts = {
                     'quiet': True,
                     'skip_download': True,
@@ -540,7 +529,7 @@ async def play(ctx, *, search):
         await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
         
 
-@bot.command(name = "playq", help = " - Play a song/video from the queue.")
+@bot.command(name = "playq", help = " - Play the current queue.")
 @commands.has_role('Vibe Master')
 async def playq(ctx):
     if (ctx.author.voice):
@@ -548,7 +537,7 @@ async def playq(ctx):
             channel = ctx.message.author.voice.channel
             voice = await channel.connect()
         else:
-            ctx.voice_client.stop()
+            #ctx.voice_client.stop()
             voice = ctx.guild.voice_client
 
         query_string = urllib.parse.urlencode({
@@ -563,19 +552,17 @@ async def playq(ctx):
 
         FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
         YDL_OPTIONS = {'format': "bestaudio"}
-        #voice = ctx.voice_client
 
         with youtube_dl.YoutubeDL(YDL_OPTIONS) as ydl:
             info = ydl.extract_info(link, download=False)
             url2 = info['formats'][0]['url']
             source = await discord.FFmpegOpusAudio.from_probe(url2, **FFMPEG_OPTIONS)
             voice.play(source)
-        await ctx.send('Now Playing! :notes: ' + queue[0]) #Return first search result
+        await ctx.send('Now Playing! :notes: ' + link)
         while voice.is_playing() or voice.is_paused():
             await sleep(1)
-        del(queue[int(0)])
         del(queue2[int(0)])
-        if len(queue) != 0:
+        if len(queue2) != 0:
             temp = bot.get_command(name = 'playq')
             await temp.callback(ctx)
         else:
@@ -583,3 +570,21 @@ async def playq(ctx):
             await ctx.send("I have left the voice channel.")
     else:
         await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
+
+
+@bot.command(name = "shuffleq", help = " - Shuffle the current queue (TESTING).")
+@commands.check(check_if_me)
+async def shuffleq(ctx):
+    tempq = []
+    tempq.extend(queue2)
+    random.shuffle(tempq)
+    queue2.clear()
+    queue2.extend(tempq)
+    del tempq
+    
+    voice = discord.utils.get(bot.voice_clients,guild=ctx.guild)
+    voice.stop()
+    await ctx.send("Queue shuffled.")
+    await ctx.send(f'Your queue is now `{queue2}!`')
+    temp = bot.get_command(name = 'playq')
+    await temp.callback(ctx)
