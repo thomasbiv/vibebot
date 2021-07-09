@@ -385,16 +385,57 @@ async def clear(ctx):
     await ctx.guild.voice_client.disconnect()
     await ctx.send("I have left the voice channel.")
 
-@bot.command(name = "playlink", help = " - Play audio off of YouTube using a link (TESTING: DOES NOT ADD TO QUEUE).")
-@commands.check(check_if_me)
+@bot.command(name = "playlink", help = " - Play audio off of YouTube using a link.")
+@commands.has_role('Vibe Master')
 async def playlink(ctx, url:str):
     if (ctx.author.voice):
         if not (ctx.voice_client):
             channel = ctx.message.author.voice.channel
             voice = await channel.connect()
+            queue.append(url)
+
+            ydl_opts = {
+                'quiet': True,
+                'skip_download': True,
+                }
+            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                info = ydl.extract_info(url)
+
+            queue2.append(info['title'])
+            await ctx.send('Selection added to queue!')
+            temp = bot.get_command(name = 'playq')
+            await temp.callback(ctx)
+            
         else:
-            ctx.voice_client.stop()
+            #ctx.voice_client.stop()
             voice = ctx.guild.voice_client
+            if voice.is_playing() or voice.is_paused():
+                queue.append(url)
+
+                ydl_opts = {
+                    'quiet': True,
+                    'skip_download': True,
+                    }
+                with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                    info = ydl.extract_info(url)
+
+                queue2.append(info['title'])
+                await ctx.send('Selection added to queue!')
+            else:
+                queue.append(url)
+
+                ydl_opts = {
+                    'quiet': True,
+                    'skip_download': True,
+                    }
+                with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                    info = ydl.extract_info(url)
+
+                queue2.append(info['title'])
+                await ctx.send('Selection added to queue!')
+                temp = bot.get_command(name = 'playq')
+                await temp.callback(ctx)
+        """
         FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
         YDL_OPTIONS = {'format': "bestaudio"}
         #voice = ctx.voice_client
@@ -412,6 +453,7 @@ async def playlink(ctx, url:str):
             await temp.callback(ctx)
         else:
             await voice.disconnect()
+        """
     else:
         await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
@@ -432,7 +474,15 @@ async def play(ctx, *, search):
             channel = ctx.message.author.voice.channel
             voice = await channel.connect()
             queue.append(url)
-            queue2.append(search)
+
+            ydl_opts = {
+                'quiet': True,
+                'skip_download': True,
+                }
+            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                info = ydl.extract_info(url)
+            
+            queue2.append(info['title'])
             await ctx.send('Selection added to queue!')
             temp = bot.get_command(name = 'playq')
             await temp.callback(ctx)
@@ -441,11 +491,27 @@ async def play(ctx, *, search):
             voice = ctx.guild.voice_client
             if voice.is_playing() or voice.is_paused():
                 queue.append(url)
-                queue2.append(search)
+
+                ydl_opts = {
+                    'quiet': True,
+                    'skip_download': True,
+                    }
+                with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                    info = ydl.extract_info(url)
+            
+                queue2.append(info['title'])
                 await ctx.send('Selection added to queue!')
             else:
                 queue.append(url)
-                queue2.append(search)
+
+                ydl_opts = {
+                    'quiet': True,
+                    'skip_download': True,
+                    }
+                with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                    info = ydl.extract_info(url)
+            
+                queue2.append(info['title'])
                 await ctx.send('Selection added to queue!')
                 temp = bot.get_command(name = 'playq')
                 await temp.callback(ctx)
@@ -484,12 +550,23 @@ async def playq(ctx):
         else:
             ctx.voice_client.stop()
             voice = ctx.guild.voice_client
+
+        query_string = urllib.parse.urlencode({
+            'search_query': queue2[0]
+        })
+        htm_content = urllib.request.urlopen(
+            'http://www.youtube.com/results?' + query_string
+        )
+        search_results = re.findall(r"watch\?v=(\S{11})", htm_content.read().decode())
+        link = 'http://www.youtube.com/watch?v=' + search_results[0]
+
+
         FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
         YDL_OPTIONS = {'format': "bestaudio"}
         #voice = ctx.voice_client
 
         with youtube_dl.YoutubeDL(YDL_OPTIONS) as ydl:
-            info = ydl.extract_info(queue[0], download=False)
+            info = ydl.extract_info(link, download=False)
             url2 = info['formats'][0]['url']
             source = await discord.FFmpegOpusAudio.from_probe(url2, **FFMPEG_OPTIONS)
             voice.play(source)
@@ -506,4 +583,3 @@ async def playq(ctx):
             await ctx.send("I have left the voice channel.")
     else:
         await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
-    
