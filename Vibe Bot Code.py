@@ -15,6 +15,7 @@ client = discord.Client()
 bot = commands.Bot(command_prefix ='$')
 
 queue2 = []
+SHUFFLE_COND = 0
 
 @bot.event
 async def on_ready():
@@ -142,53 +143,7 @@ async def leave(ctx):
     else:
         await ctx.send("I am not in a voice channel.")
         
-"""
-@bot.command(name = "playlink", help = " - Play audio off of YouTube using a link.")
-@commands.has_role('Vibe Master')
-async def playlink(ctx, url:str):
-    song_there = os.path.isfile("song.mp3")
-    try:
-        if song_there:
-            os.remove("song.mp3")
-    except PermissionError:
-        await ctx.send("Please wait for the current song/video to end or use the '$stop' command before playing a new selection.")
 
-    if (ctx.author.voice):
-        #connect to voice channel
-        if not (ctx.voice_client):
-            channel = ctx.message.author.voice.channel
-            voice = await channel.connect()
-        else:
-            voice = ctx.guild.voice_client
-     
-        ydl_opts = {
-        'format': 'bestaudio/best',
-        'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',
-            'preferredquality': '192',
-        }],
-        }
-
-        #download youtube video
-        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-            ydl.download([url])
-
-        for file in os.listdir("./"):
-            if file.endswith(".mp3"):
-                os.rename(file, "song.mp3")
-
-        #play youtube video
-        source = FFmpegPCMAudio('song.mp3')
-        player = voice.play(source)
-        await ctx.send('Now Playing! :notes: ' + url) #Return first search result 
-        while voice.is_playing() or voice.is_paused():
-            await sleep(1)
-        await voice.disconnect()
-
-    else:
-        await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
-"""
 
 @bot.command(pass_context = True, name = "pause", help = " - Pause the current song/video being played in a voice channel.")
 @commands.has_role('Vibe Master')
@@ -221,63 +176,7 @@ async def skipq(ctx):
         await ctx.guild.voice_client.disconnect()
         await ctx.send("I have left the voice channel.")
 
-"""
-@bot.command(name = "play", help = " - Play audio off of YouTube using keywords.")
-@commands.has_role('Vibe Master')
-async def play(ctx, *, search):
-    query_string = urllib.parse.urlencode({
-        'search_query': search
-    })
-    htm_content = urllib.request.urlopen(
-        'http://www.youtube.com/results?' + query_string
-    )
-    search_results = re.findall(r"watch\?v=(\S{11})", htm_content.read().decode())
-    #await ctx.send('Now Playing! :notes: http://www.youtube.com/watch?v=' + search_results[0]) #Return first search result
-    link = 'http://www.youtube.com/watch?v=' + search_results[0]
-    song_there = os.path.isfile("song.mp3")
-    try:
-        if song_there:
-            os.remove("song.mp3")
-    except PermissionError:
-        await ctx.send("Please wait for the current song to end or use the '$stop' command before playing a new song.")
 
-    if (ctx.author.voice):
-        #connect to voice channel
-        if not (ctx.voice_client):
-            channel = ctx.message.author.voice.channel
-            voice = await channel.connect()
-        else:
-            voice = ctx.guild.voice_client
-     
-        ydl_opts = {
-        'format': 'bestaudio/best',
-        'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',
-            'preferredquality': '192',
-        }],
-        }
-
-        #download youtube video
-        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-            ydl.download([link])
-
-        for file in os.listdir("./"):
-            if file.endswith(".mp3"):
-                os.rename(file, "song.mp3")
-
-        #play youtube video
-        source = FFmpegPCMAudio('song.mp3')
-        player = voice.play(source)
-        await ctx.send('Now Playing! :notes: http://www.youtube.com/watch?v=' + search_results[0]) #Return first search result 
-
-        while voice.is_playing() or voice.is_paused():
-            await sleep(1)
-        await voice.disconnect()
-
-    else:
-        await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
-"""
 
 @bot.command(name = "enq", help = " - Add audio from YouTube to the queue.")
 @commands.has_role('Vibe Master')
@@ -311,60 +210,7 @@ async def delq(ctx, number):
         await ctx.send(f'Your queue is now `{queue2}!`')
     except:
         await ctx.send("The queue is either empty or the specified selection is out of range.")
-"""
-@bot.command(name = "playq", help = " - Play audio from the queue (RESTRICTED).")
-@commands.check(check_if_me)
-async def playq(ctx):
-    song_there = os.path.isfile("song.mp3")
-    try:
-        if song_there:
-            os.remove("song.mp3")
-    except PermissionError:
-        await ctx.send("Please wait for the current song/video to end or use the '$stop' command before playing a new selection.")
 
-    if (ctx.author.voice):
-        #connect to voice channel
-        if not (ctx.voice_client):
-            channel = ctx.message.author.voice.channel
-            voice = await channel.connect()
-        else:
-            voice = ctx.guild.voice_client
-     
-        ydl_opts = {
-        'format': 'bestaudio/best',
-        'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',
-            'preferredquality': '192',
-        }],
-        }
-
-        #download youtube video
-        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-            ydl.download([queue[0]])
-
-        for file in os.listdir("./"):
-            if file.endswith(".mp3"):
-                os.rename(file, "song.mp3")
-
-        #play youtube video
-        source = FFmpegPCMAudio('song.mp3')
-        player = voice.play(source)
-        await ctx.send('Now Playing! :notes: ' + queue[0]) #Return first search result 
-        while voice.is_playing() or voice.is_paused():
-            await sleep(1)
-        del(queue[int(0)])
-        del(queue2[int(0)])
-        #await voice.disconnect()
-        if len(queue) < 1:
-            await voice.disconnect()
-        else:
-            #await ctx.invoke(self.bot.get_command('playq'), query = ctx)
-            temp = bot.get_command(name = 'playq')
-            await temp.callback(ctx)
-    else:
-        await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
-"""
     
 @bot.command(name = "viewq", help = " - View the current selections in the queue.")
 @commands.has_role('Vibe Master')
@@ -431,25 +277,7 @@ async def playlink(ctx, url:str):
                 await ctx.send('Selection added to queue!')
                 temp = bot.get_command(name = 'playq')
                 await temp.callback(ctx)
-        """
-        FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
-        YDL_OPTIONS = {'format': "bestaudio"}
-        #voice = ctx.voice_client
-
-        with youtube_dl.YoutubeDL(YDL_OPTIONS) as ydl:
-            info = ydl.extract_info(url, download=False)
-            url2 = info['formats'][0]['url']
-            source = await discord.FFmpegOpusAudio.from_probe(url2, **FFMPEG_OPTIONS)
-            voice.play(source)
-        await ctx.send('Now Playing! :notes: ' + url) #Return first search result
-        while voice.is_playing() or voice.is_paused():
-            await sleep(1)
-        if len(queue) != 0:
-            temp = bot.get_command(name = 'playq')
-            await temp.callback(ctx)
-        else:
-            await voice.disconnect()
-        """
+        
     else:
         await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
@@ -504,27 +332,7 @@ async def play(ctx, *, search):
                 await ctx.send('Selection added to queue!')
                 temp = bot.get_command(name = 'playq')
                 await temp.callback(ctx)
-        """        
-        FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
-        YDL_OPTIONS = {'format': "bestaudio"}
-        #voice = ctx.voice_client
-
-        with youtube_dl.YoutubeDL(YDL_OPTIONS) as ydl:
-            info = ydl.extract_info(url, download=False)
-            url2 = info['formats'][0]['url']
-            source = await discord.FFmpegOpusAudio.from_probe(url2, **FFMPEG_OPTIONS)
-            voice.play(source)
-        await ctx.send('Now Playing! :notes: http://www.youtube.com/watch?v=' + search_results[0]) #Return first search result
-        while voice.is_playing() or voice.is_paused():
-            await sleep(1)
-        del(queue[int(number)])
-        del(queue2[int(number)])
-        if len(queue) != 0:
-            temp = bot.get_command(name = 'playq')
-            await temp.callback(ctx)
-        else:
-            await voice.disconnect()
-        """
+        
     else:
         await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
         
@@ -561,7 +369,11 @@ async def playq(ctx):
         await ctx.send('Now Playing! :notes: ' + link)
         while voice.is_playing() or voice.is_paused():
             await sleep(1)
-        del(queue2[int(0)])
+        global SHUFFLE_COND 
+        if SHUFFLE_COND  == 1:
+            SHUFFLE_COND = 0
+        else:
+            del(queue2[int(0)])
         if len(queue2) != 0:
             temp = bot.get_command(name = 'playq')
             await temp.callback(ctx)
@@ -572,9 +384,11 @@ async def playq(ctx):
         await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
 
-@bot.command(name = "shuffleq", help = " - Shuffle the current queue (TESTING).")
-@commands.check(check_if_me)
+@bot.command(name = "shuffleq", help = " - Shuffle the current queue.")
+@commands.has_role('Vibe Master')
 async def shuffleq(ctx):
+    global SHUFFLE_COND
+    SHUFFLE_COND  = 1
     tempq = []
     tempq.extend(queue2)
     random.shuffle(tempq)
