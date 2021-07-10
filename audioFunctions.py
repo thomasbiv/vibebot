@@ -15,7 +15,7 @@ class audioFunctions(commands.Cog):
     def __init__(self,bot):
         self.bot=bot
 
-    @bot.command(name = "youtube", help = " - Search for a YouTube video!")
+    @commands.command(name = "youtube", help = " - Search for a YouTube video!")
     @commands.has_role('Vibe Master')
     async def youtube(ctx, *, search):
         query_string = urllib.parse.urlencode({
@@ -28,8 +28,8 @@ class audioFunctions(commands.Cog):
         await ctx.send('http://www.youtube.com/watch?v=' + search_results[0]) #Return first search result
 
 
-    #@bot.command(name = "join", help = " - Have Vibe Bot join your voice channel")
-    @bot.command(pass_context = True, name = "join", help = " - Have Vibe Bot join your voice channel (TESTING)." )
+    #@commands.command(name = "join", help = " - Have Vibe Bot join your voice channel")
+    @commands.command(pass_context = True, name = "join", help = " - Have Vibe Bot join your voice channel (TESTING)." )
     @commands.is_owner()
     async def join(ctx):
         connected = ctx.author.voice
@@ -40,8 +40,8 @@ class audioFunctions(commands.Cog):
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
-    #@bot.command(name = "leave", help = " - Have Vibe Bot leave your voice channel")
-    @bot.command(pass_context = True, name = "leave", help = " - Have Vibe Bot leave your voice channel (TESTING)." )
+    #@commands.command(name = "leave", help = " - Have Vibe Bot leave your voice channel")
+    @commands.command(pass_context = True, name = "leave", help = " - Have Vibe Bot leave your voice channel (TESTING)." )
     @commands.is_owner()
     async def leave(ctx):
         if (ctx.voice_client):
@@ -52,7 +52,7 @@ class audioFunctions(commands.Cog):
             
 
 
-    @bot.command(pass_context = True, name = "pause", help = " - Pause the current song/video being played in a voice channel.")
+    @commands.command(pass_context = True, name = "pause", help = " - Pause the current song/video being played in a voice channel.")
     @commands.has_role('Vibe Master')
     async def pause(ctx):
         voice = discord.utils.get(bot.voice_clients,guild=ctx.guild)
@@ -62,7 +62,7 @@ class audioFunctions(commands.Cog):
         else:
             await ctx.send("I am not playing any music to pause!")
 
-    @bot.command(pass_context = True, name = "resume", help = " - Resume the current song/video that is paused in the voice channel.")
+    @commands.command(pass_context = True, name = "resume", help = " - Resume the current song/video that is paused in the voice channel.")
     @commands.has_role('Vibe Master')
     async def resume(ctx):
         voice = discord.utils.get(bot.voice_clients,guild=ctx.guild)
@@ -73,7 +73,7 @@ class audioFunctions(commands.Cog):
             await ctx.send("There is currently no song/video that is paused.")
         
 
-    @bot.command(pass_context = True, name = "skipq", help = " - Stop the current song/video and play the next song in the queue. ")
+    @commands.command(pass_context = True, name = "skipq", help = " - Stop the current song/video and play the next song in the queue. ")
     @commands.has_role('Vibe Master')
     async def skipq(ctx):
         voice = discord.utils.get(bot.voice_clients,guild=ctx.guild)
@@ -85,7 +85,7 @@ class audioFunctions(commands.Cog):
 
 
 
-    @bot.command(name = "enq", help = " - Add audio from YouTube to the queue.")
+    @commands.command(name = "enq", help = " - Add audio from YouTube to the queue.")
     @commands.has_role('Vibe Master')
     async def enq(ctx, *, search):
 
@@ -108,7 +108,7 @@ class audioFunctions(commands.Cog):
         queue2.append(info['title'])
         await ctx.send("Selection added to queue!")
 
-    @bot.command(name = "delq", help = " - Delete the specified selection in the queue.")
+    @commands.command(name = "delq", help = " - Delete the specified selection in the queue.")
     @commands.has_role('Vibe Master')
     async def delq(ctx, number):
 
@@ -119,7 +119,7 @@ class audioFunctions(commands.Cog):
             await ctx.send("The queue is either empty or the specified selection is out of range.")
 
         
-    @bot.command(name = "viewq", help = " - View the current selections in the queue.")
+    @commands.command(name = "viewq", help = " - View the current selections in the queue.")
     @commands.has_role('Vibe Master')
     async def viewq(ctx):
         try:
@@ -127,7 +127,7 @@ class audioFunctions(commands.Cog):
         except:
             await ctx.send("You have no queue initialized, so your queue is empty!")
 
-    @bot.command(name = "clear", help = " - Stop the current song/video being played and clears the queue.")
+    @commands.command(name = "clear", help = " - Stop the current song/video being played and clears the queue.")
     @commands.has_role('Vibe Master')
     async def clear(ctx):
         #queue.clear()
@@ -140,7 +140,7 @@ class audioFunctions(commands.Cog):
         await ctx.guild.voice_client.disconnect()
         await ctx.send("I have left the voice channel.")
 
-    @bot.command(name = "playlink", help = " - Play audio off of YouTube using a link. Also adds to queue.")
+    @commands.command(name = "playlink", help = " - Play audio off of YouTube using a link. Also adds to queue.")
     @commands.has_role('Vibe Master')
     async def playlink(ctx, url:str):
         if (ctx.author.voice):
@@ -188,7 +188,7 @@ class audioFunctions(commands.Cog):
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
-    @bot.command(name = "play", help = " - Play audio off of YouTube using keywords. Also adds to queue.")
+    @commands.command(name = "play", help = " - Play audio off of YouTube using keywords. Also adds to queue.")
     @commands.has_role('Vibe Master')
     async def play(ctx, *, search):
         query_string = urllib.parse.urlencode({
@@ -244,7 +244,7 @@ class audioFunctions(commands.Cog):
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
             
 
-    @bot.command(name = "playq", help = " - Play the current queue.")
+    @commands.command(name = "playq", help = " - Play the current queue.")
     @commands.has_role('Vibe Master')
     async def playq(ctx):
         if (ctx.author.voice):
@@ -291,7 +291,7 @@ class audioFunctions(commands.Cog):
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
 
-    @bot.command(name = "shuffleq", help = " - Shuffle the current queue.")
+    @commands.command(name = "shuffleq", help = " - Shuffle the current queue.")
     @commands.has_role('Vibe Master')
     async def shuffleq(ctx):
         global SHUFFLE_COND

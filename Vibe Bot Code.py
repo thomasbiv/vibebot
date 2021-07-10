@@ -19,11 +19,7 @@ async def on_ready():
 async def on_message(message):
     if message.author == client.user:
         return
-    '''
-    if message.content.startswith("ping"):
-        await message.channel.send(f'Pong! - {round(bot.latency * 1000)}ms')                                                                 #await keyword makes sure all other actions are completed before taking this action
-    '''
-    #if message.author.id == 393845694349443073:
+
     if message.content.startswith("$"):
         await message.add_reaction("🤠")
     await bot.process_commands(message)
