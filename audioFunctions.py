@@ -168,7 +168,7 @@ class audioFunctions(commands.Cog):
                 multiServerQueue[ctx.guild.id].append(info['title'])
                 await ctx.send('Selection added to queue!')
                 temp = self.bot.get_command(name='playq')
-                await temp.callback(ctx)
+                await temp.callback(self, ctx)
 
             else:
                 # ctx.voice_client.stop()
@@ -194,7 +194,7 @@ class audioFunctions(commands.Cog):
                     multiServerQueue[ctx.guild.id].append(info['title'])
                     await ctx.send('Selection added to queue!')
                     temp = self.bot.get_command(name='playq')
-                    await temp.callback(ctx)
+                    await temp.callback(self, ctx)
 
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
@@ -227,7 +227,7 @@ class audioFunctions(commands.Cog):
                 multiServerQueue[ctx.guild.id].append(info['title'])
                 await ctx.send('Selection added to queue!')
                 temp = self.bot.get_command(name='playq')
-                await temp.callback(self,ctx)
+                await temp.callback(self, ctx)
             else:
                 # ctx.voice_client.stop()
                 voice = ctx.guild.voice_client
@@ -252,7 +252,7 @@ class audioFunctions(commands.Cog):
                     multiServerQueue[ctx.guild.id].append(info['title'])
                     await ctx.send('Selection added to queue!')
                     temp = self.bot.get_command(name='playq')
-                    await temp.callback(ctx)
+                    await temp.callback(self, ctx)
 
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
@@ -303,7 +303,7 @@ class audioFunctions(commands.Cog):
                 del(multiServerQueue[ctx.guild.id][int(0)])
             if len(multiServerQueue[ctx.guild.id]) != 0:
                 temp = self.bot.get_command(name='playq')
-                await temp.callback(ctx)
+                await temp.callback(self, ctx)
             else:
                 await voice.disconnect()
                 await ctx.send("I have left the voice channel.")
@@ -329,7 +329,7 @@ class audioFunctions(commands.Cog):
         await ctx.send("Queue shuffled.")
         await ctx.send(f'Your queue is now `{multiServerQueue[ctx.guild.id]}!`')
         temp = self.bot.get_command(name='playq')
-        await temp.callback(ctx)
+        await temp.callback(self, ctx)
 
 
 def setup(bot):

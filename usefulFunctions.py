@@ -19,7 +19,7 @@ class usefulFunctions(commands.Cog):
 
     @commands.command(name="ping", help=" - Display the latency of Vibe Bot.")
     @commands.has_role('Vibe Master')
-    async def ping(ctx):
+    async def ping(self, ctx):
         await ctx.send(f'Pong! :ping_pong: - {round(self.bot.latency * 1000)}ms')
 
     @commands.command(name='8ball', help=" - Ask a question to the Magic 8 Ball and recieve your fortune...")
