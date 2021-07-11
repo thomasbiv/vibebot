@@ -3,17 +3,16 @@ from discord.ext.commands import bot
 from discord.ext import commands
 
 client = discord.Client()
-bot = commands.Bot(command_prefix ='$')
+bot = commands.Bot(command_prefix='$')
 
-queue2 = []
-SHUFFLE_COND = 0
 
 @bot.event
 async def on_ready():
-    await bot.change_presence(status = discord.Status.online, activity = discord.Game("with Tommy's sanity"))
+    await bot.change_presence(status=discord.Status.online, activity=discord.Game("with Tommy's sanity"))
     print("We have logged in as {0.user}".format(bot))
-    client.load_extension('usefulFunctions')
-    client.load_extension('audioFunctions')
+    bot.load_extension('usefulFunctions')
+    bot.load_extension('audioFunctions')
+
 
 @bot.event
 async def on_message(message):
@@ -24,13 +23,16 @@ async def on_message(message):
         await message.add_reaction("🤠")
     await bot.process_commands(message)
 
+
 @bot.event
 async def on_member_join(member):
     print(f'{member} has joined the server!')
 
+
 @bot.event
 async def on_member_remove(member):
     print(f'{member} has left the server. :(')
+
 
 @bot.event
 async def on_command_error(ctx, error):
@@ -42,3 +44,5 @@ async def on_command_error(ctx, error):
         await ctx.send('Error: You do not have permission to use this command.')
     if isinstance(error, commands.MissingRole):
         await ctx.send('Error: You do not have the required role to use this command.')
+
+bot.run('ODYzNTkxMzA4MzI0ODk2ODE4.YOpIFA.epPTlnh5qbtBoPCZ1sDqx0kfg6I')
