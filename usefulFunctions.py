@@ -47,11 +47,6 @@ class usefulFunctions(commands.Cog):
                      'Very doubtful.']
         await ctx.send(f'Question: {question}\nAnswer: {random.choice(responses)}')
 
-    @commands.command(name="devs", help=" - List the developers of Vibe Bot.")
-    @commands.has_role('Vibe Master')
-    async def devs(self, ctx):
-        await ctx.send("DEVS: Thomas Bivins")
-
     @commands.command(name="purge", help=" - Purges (clears) the last specified amount of messages.")
     @commands.has_role('Janitor')
     @commands.has_permissions(manage_messages=True)

@@ -80,10 +80,17 @@ class audioFunctions(commands.Cog):
     @commands.command(pass_context=True, name="skipq", help=" - Stop the current song/video and play the next song in the queue. ") # This needs to call playq or start the player again afterwards. 
                                                                                                                                     # If you run playq after it works. otherwise stays without playing.
     @commands.has_role('Vibe Master')
-    async def skipq(self, ctx):
+    async def skipq(self, ctx, amt = 0):
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
+        if (amt > 0):
+            if (amt > len(multiServerQueue[ctx.guild.id])):
+                await ctx.send("Amount requested exceeds range of queue. Skipping current song.")
+            else:
+                for i in range(amt - 1):
+                    del(multiServerQueue[ctx.guild.id][int(0)])
+                    
         voice.stop()
-        await ctx.send("Song/video skipped.")
+        await ctx.send("Selection(s) skipped.")
         if len(multiServerQueue[ctx.guild.id]) == 0:
             await ctx.guild.voice_client.disconnect()
             await ctx.send("I have left the voice channel.")
@@ -317,19 +324,19 @@ class audioFunctions(commands.Cog):
             return await ctx.send("Nothing in the current queue.")
         global SHUFFLE_COND
         SHUFFLE_COND = 1
-        tempq = []
-        tempq.extend(multiServerQueue[ctx.guild.id])
-        random.shuffle(tempq)
-        multiServerQueue[ctx.guild.id].clear()
-        multiServerQueue[ctx.guild.id].extend(tempq)
-        del tempq
-
-        voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
-        voice.stop()
+        random.shuffle(multiServerQueue[ctx.guild.id])
+        if not (ctx.voice_client):
+                channel = ctx.message.author.voice.channel
+                voice = await channel.connect()
+        else:
+                voice = ctx.guild.voice_client
+        if voice.is_playing() or voice.is_paused():
+            voice.stop()
         await ctx.send("Queue shuffled.")
         await ctx.send(f'Your queue is now `{multiServerQueue[ctx.guild.id]}!`')
-        temp = self.bot.get_command(name='playq')
-        await temp.callback(self, ctx)
+        if not voice.is_playing() or voice.is_paused():
+            temp = self.bot.get_command(name='playq')
+            await temp.callback(self, ctx)
 
 
 def setup(bot):
