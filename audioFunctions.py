@@ -33,6 +33,7 @@ class audioFunctions(commands.Cog):
             r"watch\?v=(\S{11})", htm_content.read().decode())
         # Return first search result
         await ctx.send('http://www.youtube.com/watch?v=' + search_results[0])
+        
 
 
     @commands.command(name="join", help=" - Have Vibe Bot join your voice channel (TESTING).")
@@ -48,6 +49,8 @@ class audioFunctions(commands.Cog):
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
+            
+
     @commands.command(pass_context=True, name="leave", help=" - Have Vibe Bot leave your voice channel (TESTING).")
     @commands.is_owner()
     async def leave(self, ctx):
@@ -56,44 +59,51 @@ class audioFunctions(commands.Cog):
             await ctx.send("I have left the voice channel.")
         else:
             await ctx.send("I am not in a voice channel.")
+            
 
-    @commands.command(pass_context=True, name="pause", help=" - Pause the current song/video being played in a voice channel.")
+
+    @commands.command(pass_context=True, name="pause", help=" - Pause the current selection being played in a voice channel.")
     @commands.has_role('Vibe Master')
     async def pause(self, ctx):
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
         if voice.is_playing():
             voice.pause()
-            await ctx.send("Song/video paused.")
+            await ctx.send("Selection paused. :pause_button:")
         else:
             await ctx.send("I am not playing any music to pause!")
+            
+            
 
-    @commands.command(pass_context=True, name="resume", help=" - Resume the current song/video that is paused in the voice channel.")
+    @commands.command(pass_context=True, name="resume", help=" - Resume the current selection that is paused in the voice channel.")
     @commands.has_role('Vibe Master')
     async def resume(self, ctx):
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
         if voice.is_paused():
             voice.resume()
-            await ctx.send("Song/video resumed.")
+            await ctx.send("Selection resumed. :play_pause:")
         else:
             await ctx.send("There is currently no song/video that is paused.")
+            
+            
 
-    @commands.command(pass_context=True, name="skipq", help=" - Stop the current song/video and play the next song in the queue. ") # This needs to call playq or start the player again afterwards. 
-                                                                                                                                    # If you run playq after it works. otherwise stays without playing.
+    @commands.command(pass_context=True, name="skipq", help=" - Skip the specified amount of selections in the queue. ") 
     @commands.has_role('Vibe Master')
     async def skipq(self, ctx, amt = 0):
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
         if (amt > 0):
             if (amt > len(multiServerQueue[ctx.guild.id])):
-                await ctx.send("Amount requested exceeds range of queue. Skipping current song.")
+                await ctx.send("Amount requested exceeds range of queue. Skipping current selection.")
             else:
                 for i in range(amt - 1):
                     del(multiServerQueue[ctx.guild.id][int(0)])
                     
         voice.stop()
-        await ctx.send("Selection(s) skipped.")
+        await ctx.send("Selection(s) skipped. :thumbsup:")
         if len(multiServerQueue[ctx.guild.id]) == 0:
             await ctx.guild.voice_client.disconnect()
             await ctx.send("I have left the voice channel.")
+
+            
 
     @commands.command(name="enq", help=" - Add audio from YouTube to the queue.")
     @commands.has_role('Vibe Master')
@@ -118,7 +128,9 @@ class audioFunctions(commands.Cog):
             info = ydl.extract_info(link)
 
         multiServerQueue[ctx.guild.id].append(info['title'])
-        await ctx.send("Selection added to queue!")
+        await ctx.send("Selection added to queue! :ok_hand:")
+
+        
 
     @commands.command(name="delq", help=" - Delete the specified selection in the queue.")
     @commands.has_role('Vibe Master')
@@ -130,18 +142,28 @@ class audioFunctions(commands.Cog):
                 temp = self.bot.get_command(name='skipq')
                 return await temp.callback(self, ctx, amt=0)
             del(multiServerQueue[ctx.guild.id][int(number)])
-            await ctx.send(f'Your queue is now `{multiServerQueue[ctx.guild.id]}!`')
+            await ctx.send("Selection deleted from queue! :x:")
+            #await ctx.send(f'Your queue is now `{multiServerQueue[ctx.guild.id]}!`')
         except:
             await ctx.send("The specified selection is out of range.")
+
+            
 
     @commands.command(name="viewq", help=" - View the current selections in the queue.")
     @commands.has_role('Vibe Master')
     async def viewq(self,ctx):
         if ctx.guild.id not in multiServerQueue:
             return await ctx.send('No queue.')
-        await ctx.send(f'Your queue is now `{multiServerQueue[ctx.guild.id]}!`')
+        await ctx.send(":notes: Current queue: ")
+        for i in range(len(multiServerQueue[ctx.guild.id])):
+            if i == 0:
+                await ctx.send("NP: " + multiServerQueue[ctx.guild.id][i])
+            else:
+                await ctx.send(str(i) + ". " + multiServerQueue[ctx.guild.id][i])
 
-    @commands.command(name="clear", help=" - Stop the current song/video being played and clears the queue.")
+                
+
+    @commands.command(name="clear", help=" - Stop the current selection being played and clears the queue.")
     @commands.has_role('Vibe Master')
     async def clear(self, ctx):
         if ctx.guild.id not in multiServerQueue:
@@ -173,34 +195,25 @@ class audioFunctions(commands.Cog):
                     info = ydl.extract_info(url)
 
                 multiServerQueue[ctx.guild.id].append(info['title'])
-                await ctx.send('Selection added to queue!')
+                await ctx.send('Selection added to queue! :ok_hand:')
                 temp = self.bot.get_command(name='playq')
                 await temp.callback(self, ctx)
 
             else:
                 voice = ctx.guild.voice_client
-                if voice.is_playing() or voice.is_paused():
-                    ydl_opts = {
-                        'quiet': True,
-                        'skip_download': True,
-                    }
-                    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-                        info = ydl.extract_info(url)
+                ydl_opts = {
+                    'quiet': True,
+                    'skip_download': True,
+                }
+                with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                    info = ydl.extract_info(url)
 
-                    multiServerQueue[ctx.guild.id].append(info['title'])
-                    await ctx.send('Selection added to queue!')
-                else:
-                    ydl_opts = {
-                        'quiet': True,
-                        'skip_download': True,
-                    }
-                    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-                        info = ydl.extract_info(url)
-
-                    multiServerQueue[ctx.guild.id].append(info['title'])
-                    await ctx.send('Selection added to queue!')
+                multiServerQueue[ctx.guild.id].append(info['title'])
+                await ctx.send('Selection added to queue! :ok_hand:')
+                if not (voice.is_playing() or voice.is_paused()):
                     temp = self.bot.get_command(name='playq')
                     await temp.callback(self, ctx)
+                
 
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
@@ -231,36 +244,28 @@ class audioFunctions(commands.Cog):
                     info = ydl.extract_info(url)
 
                 multiServerQueue[ctx.guild.id].append(info['title'])
-                await ctx.send('Selection added to queue!')
+                await ctx.send('Selection added to queue! :ok_hand:')
                 temp = self.bot.get_command(name='playq')
                 await temp.callback(self, ctx)
             else:
                 voice = ctx.guild.voice_client
-                if voice.is_playing() or voice.is_paused():
-                    ydl_opts = {
-                        'quiet': True,
-                        'skip_download': True,
-                    }
-                    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-                        info = ydl.extract_info(url)
+                ydl_opts = {
+                    'quiet': True,
+                    'skip_download': True,
+                }
+                with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                    info = ydl.extract_info(url)
 
-                    multiServerQueue[ctx.guild.id].append(info['title'])
-                    await ctx.send('Selection added to queue!')
-                else:
-                    ydl_opts = {
-                        'quiet': True,
-                        'skip_download': True,
-                    }
-                    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-                        info = ydl.extract_info(url)
-
-                    multiServerQueue[ctx.guild.id].append(info['title'])
-                    await ctx.send('Selection added to queue!')
+                multiServerQueue[ctx.guild.id].append(info['title'])
+                await ctx.send('Selection added to queue! :ok_hand:')
+                if not (voice.is_playing() or voice.is_paused()):
                     temp = self.bot.get_command(name='playq')
                     await temp.callback(self, ctx)
 
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
+
+            
 
 
     @commands.command(name="playq", help=" - Play the current queue.")
@@ -294,7 +299,7 @@ class audioFunctions(commands.Cog):
                 url2 = info['formats'][0]['url']
                 source = await discord.FFmpegOpusAudio.from_probe(url2, **FFMPEG_OPTIONS)
                 voice.play(source)
-            await ctx.send('Now Playing! :notes: ' + link)
+            #await ctx.send('Now Playing! :notes: ' + link)
             while voice.is_playing() or voice.is_paused():
                 await sleep(1)
             global SHUFFLE_COND
@@ -312,6 +317,9 @@ class audioFunctions(commands.Cog):
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
+
+            
+
     @commands.command(name="shuffleq", help=" - Shuffle the current queue.")
     @commands.has_role('Vibe Master')
     async def shuffleq(self, ctx):
@@ -328,10 +336,11 @@ class audioFunctions(commands.Cog):
         if voice.is_playing() or voice.is_paused():
             voice.stop()
         await ctx.send("Queue shuffled.")
-        await ctx.send(f'Your queue is now `{multiServerQueue[ctx.guild.id]}!`')
+        #await ctx.send(f'Your queue is now `{multiServerQueue[ctx.guild.id]}!`')
         if not voice.is_playing() or voice.is_paused():
             temp = self.bot.get_command(name='playq')
             await temp.callback(self, ctx)
+            
 
 
 def setup(bot):
