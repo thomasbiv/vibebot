@@ -126,20 +126,20 @@ class audioFunctions(commands.Cog):
         if ctx.guild.id not in multiServerQueue:
             return await ctx.send('No queue.')
         try:
+            if (int(number) == 0):
+                temp = self.bot.get_command(name='skipq')
+                return await temp.callback(self, ctx, amt=0)
             del(multiServerQueue[ctx.guild.id][int(number)])
             await ctx.send(f'Your queue is now `{multiServerQueue[ctx.guild.id]}!`')
         except:
-            await ctx.send("The queue is either empty or the specified selection is out of range.")
+            await ctx.send("The specified selection is out of range.")
 
     @commands.command(name="viewq", help=" - View the current selections in the queue.")
     @commands.has_role('Vibe Master')
     async def viewq(self,ctx):
         if ctx.guild.id not in multiServerQueue:
             return await ctx.send('No queue.')
-        try:
-            await ctx.send(f'Your queue is now `{multiServerQueue[ctx.guild.id]}!`')
-        except:
-            await ctx.send("You have no queue initialized, so your queue is empty!")
+        await ctx.send(f'Your queue is now `{multiServerQueue[ctx.guild.id]}!`')
 
     @commands.command(name="clear", help=" - Stop the current song/video being played and clears the queue.")
     @commands.has_role('Vibe Master')
@@ -178,7 +178,6 @@ class audioFunctions(commands.Cog):
                 await temp.callback(self, ctx)
 
             else:
-                # ctx.voice_client.stop()
                 voice = ctx.guild.voice_client
                 if voice.is_playing() or voice.is_paused():
                     ydl_opts = {
@@ -236,7 +235,6 @@ class audioFunctions(commands.Cog):
                 temp = self.bot.get_command(name='playq')
                 await temp.callback(self, ctx)
             else:
-                # ctx.voice_client.stop()
                 voice = ctx.guild.voice_client
                 if voice.is_playing() or voice.is_paused():
                     ydl_opts = {
@@ -271,14 +269,10 @@ class audioFunctions(commands.Cog):
         if (ctx.author.voice):
             if ctx.guild.id not in multiServerQueue:
                 return await ctx.send("Nothing in the current queue.")
-            #if len(multiServerQueue[ctx.guild.id]) == 0:
-                #multiServerQueue.pop(ctx.guild.id, None)
-                #return ctx.send("Empty queue.")
             if not (ctx.voice_client):
                 channel = ctx.message.author.voice.channel
                 voice = await channel.connect()
             else:
-                # ctx.voice_client.stop()
                 voice = ctx.guild.voice_client
 
             query_string = urllib.parse.urlencode({
@@ -312,6 +306,7 @@ class audioFunctions(commands.Cog):
                 temp = self.bot.get_command(name='playq')
                 await temp.callback(self, ctx)
             else:
+                multiServerQueue.pop(ctx.guild.id,None)
                 await voice.disconnect()
                 await ctx.send("I have left the voice channel.")
         else:
