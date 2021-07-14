@@ -68,7 +68,7 @@ class audioFunctions(commands.Cog):
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
         if voice.is_playing():
             voice.pause()
-            await ctx.send("Selection paused. :pause_button:")
+            await ctx.send("***Selection paused.*** :pause_button:")
         else:
             await ctx.send("I am not playing any music to pause!")
             
@@ -80,7 +80,7 @@ class audioFunctions(commands.Cog):
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
         if voice.is_paused():
             voice.resume()
-            await ctx.send("Selection resumed. :play_pause:")
+            await ctx.send("***Selection resumed.*** :play_pause:")
         else:
             await ctx.send("There is currently no song/video that is paused.")
             
@@ -98,7 +98,7 @@ class audioFunctions(commands.Cog):
                     del(multiServerQueue[ctx.guild.id][int(0)])
                     
         voice.stop()
-        await ctx.send("Selection(s) skipped. :thumbsup:")
+        await ctx.send("***Selection(s) skipped.*** :thumbsup:")
         if len(multiServerQueue[ctx.guild.id]) == 0:
             await ctx.guild.voice_client.disconnect()
             await ctx.send("I have left the voice channel.")
@@ -128,7 +128,7 @@ class audioFunctions(commands.Cog):
             info = ydl.extract_info(link)
 
         multiServerQueue[ctx.guild.id].append(info['title'])
-        await ctx.send("Selection added to queue! :ok_hand:")
+        await ctx.send("***Selection added to queue!*** :ok_hand:")
 
         
 
@@ -142,7 +142,7 @@ class audioFunctions(commands.Cog):
                 temp = self.bot.get_command(name='skipq')
                 return await temp.callback(self, ctx, amt=0)
             del(multiServerQueue[ctx.guild.id][int(number)])
-            await ctx.send("Selection deleted from queue! :x:")
+            await ctx.send("***Selection deleted from queue!*** :x:")
             #await ctx.send(f'Your queue is now `{multiServerQueue[ctx.guild.id]}!`')
         except:
             await ctx.send("The specified selection is out of range.")
@@ -154,7 +154,7 @@ class audioFunctions(commands.Cog):
     async def viewq(self,ctx):
         if ctx.guild.id not in multiServerQueue:
             return await ctx.send('No queue.')
-        await ctx.send(":notes: Current queue: ")
+        await ctx.send(":notes: ***Current queue:*** ")
         for i in range(len(multiServerQueue[ctx.guild.id])):
             if i == 0:
                 await ctx.send("NP: " + multiServerQueue[ctx.guild.id][i])
@@ -169,7 +169,7 @@ class audioFunctions(commands.Cog):
         if ctx.guild.id not in multiServerQueue:
             return await ctx.send('No queue.')
         multiServerQueue.pop(ctx.guild.id,None)
-        await ctx.send("Queue cleared.")
+        await ctx.send("***Queue cleared.***")
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
         voice.stop()
         await ctx.send("Song/video stopped.")
@@ -195,7 +195,7 @@ class audioFunctions(commands.Cog):
                     info = ydl.extract_info(url)
 
                 multiServerQueue[ctx.guild.id].append(info['title'])
-                await ctx.send('Selection added to queue! :ok_hand:')
+                await ctx.send('***Selection added to queue!*** :ok_hand:')
                 temp = self.bot.get_command(name='playq')
                 await temp.callback(self, ctx)
 
@@ -209,7 +209,7 @@ class audioFunctions(commands.Cog):
                     info = ydl.extract_info(url)
 
                 multiServerQueue[ctx.guild.id].append(info['title'])
-                await ctx.send('Selection added to queue! :ok_hand:')
+                await ctx.send('***Selection added to queue!*** :ok_hand:')
                 if not (voice.is_playing() or voice.is_paused()):
                     temp = self.bot.get_command(name='playq')
                     await temp.callback(self, ctx)
@@ -244,7 +244,7 @@ class audioFunctions(commands.Cog):
                     info = ydl.extract_info(url)
 
                 multiServerQueue[ctx.guild.id].append(info['title'])
-                await ctx.send('Selection added to queue! :ok_hand:')
+                await ctx.send('***Selection added to queue!*** :ok_hand:')
                 temp = self.bot.get_command(name='playq')
                 await temp.callback(self, ctx)
             else:
@@ -257,7 +257,7 @@ class audioFunctions(commands.Cog):
                     info = ydl.extract_info(url)
 
                 multiServerQueue[ctx.guild.id].append(info['title'])
-                await ctx.send('Selection added to queue! :ok_hand:')
+                await ctx.send('***Selection added to queue!*** :ok_hand:')
                 if not (voice.is_playing() or voice.is_paused()):
                     temp = self.bot.get_command(name='playq')
                     await temp.callback(self, ctx)
@@ -335,7 +335,7 @@ class audioFunctions(commands.Cog):
                 voice = ctx.guild.voice_client
         if voice.is_playing() or voice.is_paused():
             voice.stop()
-        await ctx.send("Queue shuffled.")
+        await ctx.send("***Queue shuffled.*** :twisted_rightwards_arrows:")
         #await ctx.send(f'Your queue is now `{multiServerQueue[ctx.guild.id]}!`')
         if not voice.is_playing() or voice.is_paused():
             temp = self.bot.get_command(name='playq')
