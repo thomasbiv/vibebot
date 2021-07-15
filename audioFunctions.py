@@ -46,6 +46,12 @@ class audioFunctions(commands.Cog):
             except Exception as error:
                 print(error)
             await ctx.send("I have joined the voice channel.")
+            if not (ctx.guild.voice_client.is_playing() or ctx.guild.voice_client.is_paused()):
+                await sleep(300) #Vibe Bot idles for 5 minutes when no music is played
+                if not (ctx.guild.voice_client.is_playing() or ctx.guild.voice_client.is_paused()): #Vibe Bot performs a second audio and voice check, just in case $leave was used while in sleep mode
+                    if ctx.voice_client:
+                        await ctx.send("I have left the voice channel due to voice inactivity.")
+                        await ctx.guild.voice_client.disconnect() #After idling for 5 minutes, Vibe Bot will automatically leave the VC due to inactivity
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
