@@ -149,7 +149,6 @@ class audioFunctions(commands.Cog):
                 return await temp.callback(self, ctx, amt=0)
             del(multiServerQueue[ctx.guild.id][int(number)])
             await ctx.send("***Selection deleted from queue!*** :x:")
-            #await ctx.send(f'Your queue is now `{multiServerQueue[ctx.guild.id]}!`')
         except:
             await ctx.send("The specified selection is out of range.")
 
@@ -158,14 +157,18 @@ class audioFunctions(commands.Cog):
     @commands.command(name="viewq", help=" - View the current selections in the queue.")
     @commands.has_role('Vibe Master')
     async def viewq(self,ctx):
+        embed = discord.Embed(color=0xa09c9c)
         if ctx.guild.id not in multiServerQueue:
-            return await ctx.send('No queue.')
-        await ctx.send(":notes: ***Current queue:*** ")
+            embed.title = "***No queue.***"
+            return await ctx.send(embed = embed)
+        embed.title = ":notes: ***Current queue:***"
         for i in range(len(multiServerQueue[ctx.guild.id])):
             if i == 0:
-                await ctx.send("NP: " + multiServerQueue[ctx.guild.id][i])
+                embed.add_field(name = "NP:" , value = multiServerQueue[ctx.guild.id][i], inline = False)
             else:
-                await ctx.send(str(i) + ". " + multiServerQueue[ctx.guild.id][i])
+                embed.add_field(name = str(i) + ". ", value = multiServerQueue[ctx.guild.id][i], inline = False)
+        embed.set_footer(text = "Vibe Bot")
+        await ctx.send(embed = embed)
 
                 
 

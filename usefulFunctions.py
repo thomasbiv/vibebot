@@ -25,6 +25,7 @@ class usefulFunctions(commands.Cog):
     @commands.command(name='8ball', help=" - Ask a question to the Magic 8 Ball and recieve your fortune...")
     @commands.has_role('Vibe Master')
     async def _8ball(self, ctx, *, question):
+        embed = discord.Embed(title = ":8ball: ***The magic 8 ball says...***")
         responses = ['It is certain.',
                      'It is decidedly so.',
                      'Without a doubt.',
@@ -45,7 +46,10 @@ class usefulFunctions(commands.Cog):
                      'My sources say no.',
                      'Outlook not so good.',
                      'Very doubtful.']
-        await ctx.send(f'Question: {question}\nAnswer: {random.choice(responses)}')
+        embed.add_field(name = "Question: ", value = question, inline=True)
+        embed.add_field(name = "Answer: ", value = random.choice(responses), inline=True)
+        embed.set_footer(text = "Vibe Bot")
+        await ctx.send(embed=embed)
 
     @commands.command(name="purge", help=" - Purges (clears) the last specified amount of messages.")
     @commands.has_role('Janitor')
