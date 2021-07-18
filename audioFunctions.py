@@ -22,7 +22,7 @@ class audioFunctions(commands.Cog):
 
     @commands.command(name="youtube", help=" - Search for a YouTube video!")
     @commands.has_role('Vibe Master')
-    async def youtube(ctx, *, search):
+    async def youtube(self, ctx, *, search):
         query_string = urllib.parse.urlencode({
             'search_query': search
         })
@@ -31,13 +31,13 @@ class audioFunctions(commands.Cog):
         )
         search_results = re.findall(
             r"watch\?v=(\S{11})", htm_content.read().decode())
-        # Return first search result
-        await ctx.send('http://www.youtube.com/watch?v=' + search_results[0])
+        link = 'http://www.youtube.com/watch?v=' + search_results[0]
+        await ctx.send(link)
         
 
 
-    @commands.command(name="join", help=" - Have Vibe Bot join your voice channel (TESTING).")
-    @commands.is_owner()
+    @commands.command(name="join", help=" - Have Vibe Bot join your voice channel.")
+    @commands.has_role('Vibe Master')
     async def join(self, ctx):
         connected = ctx.author.voice
         if connected:
@@ -57,8 +57,8 @@ class audioFunctions(commands.Cog):
 
             
 
-    @commands.command(pass_context=True, name="leave", help=" - Have Vibe Bot leave your voice channel (TESTING).")
-    @commands.is_owner()
+    @commands.command(pass_context=True, name="leave", help=" - Have Vibe Bot leave your voice channel.")
+    @commands.has_role('Vibe Master')
     async def leave(self, ctx):
         if (ctx.voice_client):
             await ctx.guild.voice_client.disconnect()
@@ -92,7 +92,7 @@ class audioFunctions(commands.Cog):
             
             
 
-    @commands.command(pass_context=True, name="skipq", help=" - Skip the specified amount of selections in the queue. ") 
+    @commands.command(pass_context=True, name="skipq", help=" - Skip the specified amount of selections in the queue.") 
     @commands.has_role('Vibe Master')
     async def skipq(self, ctx, amt = 0):
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)

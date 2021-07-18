@@ -1,12 +1,14 @@
 import discord
 from discord.ext.commands import bot
 from discord.ext import commands
+from discord.ext.commands.help import HelpCommand
 from dotenv import load_dotenv
 import os
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 client = discord.Client()
 bot = commands.Bot(command_prefix='$')
+bot.remove_command("help")
 
 @bot.event
 async def on_ready():
@@ -42,5 +44,132 @@ async def on_command_error(ctx, error):
         await ctx.send('Error: You do not have permission to use this command.')
     if isinstance(error, commands.MissingRole):
         await ctx.send('Error: You do not have the required role to use this command.')
+
+@bot.group(invoke_without_command = True)
+async def help(ctx):
+    embed = discord.Embed(title = "***Help***", description = "For more information on a specific command, type $help <command>", color = 0xa09c9c)
+    embed.add_field(name = "Useful Functions", value = "roll | ping | eightball | purge", inline=False)
+    embed.add_field(name = "Audio Functions", value = "youtube | join | leave | pause | resume | skipq | enq | delq | viewq | clear | play | playq | shuffleq", inline=False)
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def roll(ctx):
+    embed = discord.Embed(title = "***roll***", description = "Roll a die with the requested amount of sides.", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$roll <amount>")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def ping(ctx):
+    embed = discord.Embed(title = "***ping***", description = "Display the latency of Vibe Bot.", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$ping")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def eightball(ctx):
+    embed = discord.Embed(title = "***eightball***", description = "Ask a question to the Magic 8 Ball and recieve your fortune...", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$eightball <question>")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def purge(ctx):
+    embed = discord.Embed(title = "***purge***", description = "Purges (clears) the last specified amount of messages (Default = 5).", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$purge <amount>")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def youtube(ctx):
+    embed = discord.Embed(title = "***youtube***", description = "Search for a YouTube video!", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$youtube <query>")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def join(ctx):
+    embed = discord.Embed(title = "***join***", description = "Have Vibe Bot join your voice channel.", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$join")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def leave(ctx):
+    embed = discord.Embed(title = "***leave***", description = "Have Vibe Bot leave your voice channel.", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$leave")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def pause(ctx):
+    embed = discord.Embed(title = "***pause***", description = "Pause the current selection being played in a voice channel.", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$pause")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def resume(ctx):
+    embed = discord.Embed(title = "***resume***", description = "Resume the current selection that is paused in a voice channel.", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$resume")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def skipq(ctx):
+    embed = discord.Embed(title = "***skipq***", description = "Skip the specified amount of selections in the queue (Default = 1).", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$skipq <amount>")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def enq(ctx):
+    embed = discord.Embed(title = "***enq***", description = "Add audio from YouTube to the queue.", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$enq <query or link>")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def delq(ctx):
+    embed = discord.Embed(title = "***delq***", description = "Delete the specified selection in the queue.", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$delq <number>")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def viewq(ctx):
+    embed = discord.Embed(title = "***viewq***", description = "View the current selections in the queue.", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$viewq")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def clear(ctx):
+    embed = discord.Embed(title = "***clear***", description = "Stop the current selection being played and clears the queue.", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$clear")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def play(ctx):
+    embed = discord.Embed(title = "***play***", description = "Play audio off of YouTube using keywords or url. Also adds to queue.", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$play <query or link>")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def playq(ctx):
+    embed = discord.Embed(title = "***playq***", description = "Play the current queue.", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$playq")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def shuffleq(ctx):
+    embed = discord.Embed(title = "***shuffleq***", description = "Shuffle the current queue.", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$shuffleq")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
 
 bot.run(TOKEN)

@@ -22,10 +22,10 @@ class usefulFunctions(commands.Cog):
     async def ping(self, ctx):
         await ctx.send(f'Pong! :ping_pong: - {round(self.bot.latency * 1000)}ms')
 
-    @commands.command(name='8ball', help=" - Ask a question to the Magic 8 Ball and recieve your fortune...")
+    @commands.command(name='eightball', help=" - Ask a question to the Magic 8 Ball and recieve your fortune...")
     @commands.has_role('Vibe Master')
     async def _8ball(self, ctx, *, question):
-        embed = discord.Embed(title = ":8ball: ***The magic 8 ball says...***")
+        embed = discord.Embed(title = ":8ball: ***The magic 8 ball says...***", color = 0xa09c9c)
         responses = ['It is certain.',
                      'It is decidedly so.',
                      'Without a doubt.',
