@@ -135,6 +135,7 @@ class audioFunctions(commands.Cog):
 
         multiServerQueue[ctx.guild.id].append(info)
         await ctx.send("***Selection added to queue!*** :ok_hand:")
+        await ctx.send('***The queue now contains ' + str(len(multiServerQueue[ctx.guild.id])) + ' selection(s)!***')
 
         
 
@@ -214,6 +215,7 @@ class audioFunctions(commands.Cog):
 
                 multiServerQueue[ctx.guild.id].append(info)
                 await ctx.send('***Selection added to queue!*** :ok_hand:')
+                await ctx.send('***The queue now contains ' + str(len(multiServerQueue[ctx.guild.id])) + ' selection(s)!***')
                 temp = self.bot.get_command(name='playq')
                 await temp.callback(self, ctx)
             else:
@@ -227,6 +229,7 @@ class audioFunctions(commands.Cog):
 
                 multiServerQueue[ctx.guild.id].append(info)
                 await ctx.send('***Selection added to queue!*** :ok_hand:')
+                await ctx.send('***The queue now contains ' + str(len(multiServerQueue[ctx.guild.id])) + ' selection(s)!***')
                 if not (voice.is_playing() or voice.is_paused()):
                     temp = self.bot.get_command(name='playq')
                     await temp.callback(self, ctx)
