@@ -133,7 +133,7 @@ class audioFunctions(commands.Cog):
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(link)
 
-        multiServerQueue[ctx.guild.id].append(info['title'])
+        multiServerQueue[ctx.guild.id].append(info)
         await ctx.send("***Selection added to queue!*** :ok_hand:")
 
         
@@ -164,9 +164,9 @@ class audioFunctions(commands.Cog):
         embed.title = ":notes: ***Current queue:***"
         for i in range(len(multiServerQueue[ctx.guild.id])):
             if i == 0:
-                embed.add_field(name = "NP:" , value = multiServerQueue[ctx.guild.id][i], inline = False)
+                embed.add_field(name = "NP:" , value = multiServerQueue[ctx.guild.id][i].get('title', None), inline = False)
             else:
-                embed.add_field(name = str(i) + ". ", value = multiServerQueue[ctx.guild.id][i], inline = False)
+                embed.add_field(name = str(i) + ". ", value = multiServerQueue[ctx.guild.id][i].get('title', None), inline = False)
         embed.set_footer(text = "Vibe Bot")
         await ctx.send(embed = embed)
 
@@ -212,7 +212,7 @@ class audioFunctions(commands.Cog):
                 with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                     info = ydl.extract_info(url)
 
-                multiServerQueue[ctx.guild.id].append(info['title'])
+                multiServerQueue[ctx.guild.id].append(info)
                 await ctx.send('***Selection added to queue!*** :ok_hand:')
                 temp = self.bot.get_command(name='playq')
                 await temp.callback(self, ctx)
@@ -225,7 +225,7 @@ class audioFunctions(commands.Cog):
                 with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                     info = ydl.extract_info(url)
 
-                multiServerQueue[ctx.guild.id].append(info['title'])
+                multiServerQueue[ctx.guild.id].append(info)
                 await ctx.send('***Selection added to queue!*** :ok_hand:')
                 if not (voice.is_playing() or voice.is_paused()):
                     temp = self.bot.get_command(name='playq')
@@ -249,26 +249,14 @@ class audioFunctions(commands.Cog):
             else:
                 voice = ctx.guild.voice_client
 
-            query_string = urllib.parse.urlencode({
-                'search_query': multiServerQueue[ctx.guild.id][0]
-            })
-            htm_content = urllib.request.urlopen(
-                'http://www.youtube.com/results?' + query_string
-            )
-            search_results = re.findall(
-                r"watch\?v=(\S{11})", htm_content.read().decode())
-            link = 'http://www.youtube.com/watch?v=' + search_results[0]
-
             FFMPEG_OPTIONS = {
                 'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
             YDL_OPTIONS = {'format': "bestaudio"}
 
             with youtube_dl.YoutubeDL(YDL_OPTIONS) as ydl:
-                info = ydl.extract_info(link, download=False)
-                url2 = info['formats'][0]['url']
+                url2 = multiServerQueue[ctx.guild.id][0]['formats'][0]['url']
                 source = await discord.FFmpegOpusAudio.from_probe(url2, **FFMPEG_OPTIONS)
                 voice.play(source)
-            #await ctx.send('Now Playing! :notes: ' + link)
             while voice.is_playing() or voice.is_paused():
                 await sleep(1)
             global SHUFFLE_COND
@@ -305,7 +293,6 @@ class audioFunctions(commands.Cog):
         if voice.is_playing() or voice.is_paused():
             voice.stop()
         await ctx.send("***Queue shuffled.*** :twisted_rightwards_arrows:")
-        #await ctx.send(f'Your queue is now `{multiServerQueue[ctx.guild.id]}!`')
         if not voice.is_playing() or voice.is_paused():
             temp = self.bot.get_command(name='playq')
             await temp.callback(self, ctx)
