@@ -299,6 +299,24 @@ class audioFunctions(commands.Cog):
         if not voice.is_playing() or voice.is_paused():
             temp = self.bot.get_command(name='playq')
             await temp.callback(self, ctx)
+
+
+
+    @commands.command(name="replay", help=" - Restart the current selection from the beginning.")
+    @commands.has_role('Vibe Master')
+    async def restart(self, ctx):
+        if ctx.voice_client:
+            voice = ctx.guild.voice_client
+            if voice.is_playing() or voice.is_paused():
+                global SHUFFLE_COND
+                SHUFFLE_COND = 1
+                voice.stop()
+                await ctx.send("***Song restarted!*** :rewind:")
+            else:
+                await ctx.send("I am not playing any music!")
+        else:
+            await ctx.send("I am not connected to a voice channel.")
+
             
 
 
