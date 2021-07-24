@@ -206,33 +206,22 @@ class audioFunctions(commands.Cog):
             if not (ctx.voice_client):
                 channel = ctx.message.author.voice.channel
                 voice = await channel.connect()
-                ydl_opts = {
-                    'quiet': True,
-                    'skip_download': True,
-                }
-                with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-                    info = ydl.extract_info(url)
-
-                multiServerQueue[ctx.guild.id].append(info)
-                await ctx.send('***Selection added to queue!*** :ok_hand:')
-                await ctx.send('***The queue now contains ' + str(len(multiServerQueue[ctx.guild.id])) + ' selection(s)!***')
-                temp = self.bot.get_command(name='playq')
-                await temp.callback(self, ctx)
             else:
                 voice = ctx.guild.voice_client
-                ydl_opts = {
-                    'quiet': True,
-                    'skip_download': True,
-                }
-                with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-                    info = ydl.extract_info(url)
+            ydl_opts = {
+                'quiet': True,
+                'skip_download': True,
+            }
+            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                info = ydl.extract_info(url)
 
-                multiServerQueue[ctx.guild.id].append(info)
-                await ctx.send('***Selection added to queue!*** :ok_hand:')
-                await ctx.send('***The queue now contains ' + str(len(multiServerQueue[ctx.guild.id])) + ' selection(s)!***')
-                if not (voice.is_playing() or voice.is_paused()):
-                    temp = self.bot.get_command(name='playq')
-                    await temp.callback(self, ctx)
+            multiServerQueue[ctx.guild.id].append(info)
+            await ctx.send('***Selection added to queue!*** :ok_hand:')
+            await ctx.send('***The queue now contains ' + str(len(multiServerQueue[ctx.guild.id])) + ' selection(s)!***')
+            if not (voice.is_playing() or voice.is_paused()):
+                temp = self.bot.get_command(name='playq')
+                await temp.callback(self, ctx)
+                
 
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
