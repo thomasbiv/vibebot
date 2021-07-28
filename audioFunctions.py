@@ -95,7 +95,7 @@ class audioFunctions(commands.Cog):
                 voice.resume()
                 await ctx.send("***Selection resumed.*** :play_pause:")
             else:
-                await ctx.send("There is currently no song/video that is paused.")
+                await ctx.send("There is currently no selection that is paused.")
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
             
@@ -201,7 +201,7 @@ class audioFunctions(commands.Cog):
             await ctx.send("***Queue cleared.***")
             voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
             voice.stop()
-            await ctx.send("Song/video stopped.")
+            await ctx.send("Selection stopped.")
             await ctx.guild.voice_client.disconnect()
             await ctx.send("I have left the voice channel.")
         else:
@@ -306,6 +306,8 @@ class audioFunctions(commands.Cog):
             if voice.is_playing() or voice.is_paused():
                 voice.stop()
             await ctx.send("***Queue shuffled.*** :twisted_rightwards_arrows:")
+            temp = self.bot.get_command(name='skipq')
+            await temp.callback(self, ctx)
             if not voice.is_playing() or voice.is_paused():
                 temp = self.bot.get_command(name='playq')
                 await temp.callback(self, ctx)
@@ -325,9 +327,9 @@ class audioFunctions(commands.Cog):
                     global SHUFFLE_COND
                     SHUFFLE_COND = 1
                     voice.stop()
-                    await ctx.send("***Song restarted!*** :rewind:")
+                    await ctx.send("***Selection restarted!*** :rewind:")
                 else:
-                    await ctx.send("I am not playing any music!")
+                    await ctx.send("I am not playing anything!")
             else:
                 await ctx.send("I am not connected to a voice channel.")
         else:
