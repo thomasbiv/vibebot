@@ -293,24 +293,22 @@ class audioFunctions(commands.Cog):
     @commands.has_role('Vibe Master')
     async def shuffleq(self, ctx):
         if (ctx.author.voice):
-            if ctx.guild.id not in multiServerQueue:
-                return await ctx.send("Nothing in the current queue.")
-            global SHUFFLE_COND
-            SHUFFLE_COND = 1
-            random.shuffle(multiServerQueue[ctx.guild.id])
-            if not (ctx.voice_client):
+            if ctx.voice_client:
+                if ctx.guild.id not in multiServerQueue:
+                    return await ctx.send("Nothing in the current queue.")
+                global SHUFFLE_COND
+                SHUFFLE_COND = 1
+                random.shuffle(multiServerQueue[ctx.guild.id])
+                if not (ctx.voice_client):
                     channel = ctx.message.author.voice.channel
                     voice = await channel.connect()
-            else:
+                else:
                     voice = ctx.guild.voice_client
-            if voice.is_playing() or voice.is_paused():
-                voice.stop()
-            await ctx.send("***Queue shuffled.*** :twisted_rightwards_arrows:")
-            temp = self.bot.get_command(name='skipq')
-            await temp.callback(self, ctx)
-            if not voice.is_playing() or voice.is_paused():
-                temp = self.bot.get_command(name='playq')
-                await temp.callback(self, ctx)
+                if voice.is_playing() or voice.is_paused():
+                    voice.stop()
+                await ctx.send("***Queue shuffled.*** :twisted_rightwards_arrows:")
+            else:
+                await ctx.send("I am not connected to a voice channel.")
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
