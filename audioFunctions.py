@@ -246,6 +246,61 @@ class audioFunctions(commands.Cog):
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
+
+    @commands.command(name="playlist", help=" - Play a playlist off of YouTube using a playlist url. Adds to queue.")
+    @commands.has_role('Vibe Master')
+    async def playlist(self, ctx, url:str):
+        if (ctx.author.voice):
+            if ctx.guild.id not in multiServerQueue:
+                multiServerQueue[ctx.guild.id] = []
+            if not (ctx.voice_client):
+                channel = ctx.message.author.voice.channel
+                voice = await channel.connect()
+            else:
+                voice = ctx.guild.voice_client
+            ydl_opts = {
+                'quiet': True,
+                'skip_download': True,
+            }
+            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                info = ydl.extract_info(url)
+                if 'entries' in info:
+                    await ctx.send('***Loading playlist...***')
+                    for i in info['entries']:
+                        #video = info['entries'][i]['url']
+                        #newInfo = ydl.extract_info(video)
+                        #multiServerQueue[ctx.guild.id].append(newInfo)
+                        
+                        newURL = i['formats'][0]['url']
+                        newInfo = ydl.extract_info(newURL)
+                        multiServerQueue[ctx.guild.id].append(newInfo)
+                        
+                        #newTitle = i['formats'][0]['title']
+                        #query_string = urllib.parse.urlencode({
+                        #    'search_query': newTitle
+                        #})
+                        #htm_content = urllib.request.urlopen(
+                        #    'http://www.youtube.com/results?' + query_string
+                        #)
+                        #search_results = re.findall(
+                        #    r"watch\?v=(\S{11})", htm_content.read().decode())
+                        #newURL = 'http://www.youtube.com/watch?v=' + search_results[0]
+                        #newInfo = ydl.extract_info(newURL)
+                        #multiServerQueue[ctx.guild.id].append(newInfo)
+                    await ctx.send('***Playlist added to queue!*** :ok_hand:')
+                else:
+                    temp = self.bot.get_command(name='clear')
+                    await temp.callback(self, ctx)
+                    return await ctx.send("Provided link is invalid.")
+
+            await ctx.send('***The queue now contains ' + str(len(multiServerQueue[ctx.guild.id])) + ' selection(s)!***')
+            if not (voice.is_playing() or voice.is_paused()):
+                temp = self.bot.get_command(name='playq')
+                await temp.callback(self, ctx)
+                
+        else:
+            await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
+
             
 
 
