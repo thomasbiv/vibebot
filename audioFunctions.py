@@ -267,26 +267,12 @@ class audioFunctions(commands.Cog):
                 if 'entries' in info:
                     await ctx.send('***Loading playlist...***')
                     for i in info['entries']:
-                        #video = info['entries'][i]['url']
-                        #newInfo = ydl.extract_info(video)
-                        #multiServerQueue[ctx.guild.id].append(newInfo)
-                        
                         newURL = i['formats'][0]['url']
                         newInfo = ydl.extract_info(newURL)
+                        newInfo['title'] = i['title']
                         multiServerQueue[ctx.guild.id].append(newInfo)
+                        # multiServerQueue[ctx.guild.id].append({'url':i['formats'][0]['url'],'title':i['title']})  possible to cut down data 
                         
-                        #newTitle = i['formats'][0]['title']
-                        #query_string = urllib.parse.urlencode({
-                        #    'search_query': newTitle
-                        #})
-                        #htm_content = urllib.request.urlopen(
-                        #    'http://www.youtube.com/results?' + query_string
-                        #)
-                        #search_results = re.findall(
-                        #    r"watch\?v=(\S{11})", htm_content.read().decode())
-                        #newURL = 'http://www.youtube.com/watch?v=' + search_results[0]
-                        #newInfo = ydl.extract_info(newURL)
-                        #multiServerQueue[ctx.guild.id].append(newInfo)
                     await ctx.send('***Playlist added to queue!*** :ok_hand:')
                 else:
                     temp = self.bot.get_command(name='clear')
