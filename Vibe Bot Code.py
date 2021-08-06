@@ -49,7 +49,7 @@ async def on_command_error(ctx, error):
 async def help(ctx):
     embed = discord.Embed(title = "***Help***", description = "For more information on a specific command, type $help <command>", color = 0xa09c9c)
     embed.add_field(name = "Useful Functions", value = "roll | ping | eightball | purge", inline=False)
-    embed.add_field(name = "Audio Functions", value = "youtube | join | leave | pause | resume | skipq | enq | delq | viewq | clear | play | playq | shuffleq | replay", inline=False)
+    embed.add_field(name = "Audio Functions", value = "youtube | join | leave | pause | resume | skipq | enq | delq | viewq | clear | play | playq | shuffleq | replay | playlist", inline=False)
     embed.set_footer(text = "Vibe Bot")
     await ctx.send(embed = embed)
 
@@ -176,6 +176,13 @@ async def shuffleq(ctx):
 async def replay(ctx):
     embed = discord.Embed(title = "***replay***", description = "Restart the current selection from the beginning.", color = 0xa09c9c)
     embed.add_field(name = "Syntax", value = "$replay")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def playlist(ctx):
+    embed = discord.Embed(title = "***playlist***", description = "Play a playlist off of YouTube using a playlist url. Adds to queue.", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$playlist <youtube playlist link>")
     embed.set_footer(text = "Vibe Bot")
     await ctx.send(embed = embed)
 

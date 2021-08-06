@@ -262,6 +262,7 @@ class audioFunctions(commands.Cog):
                 'quiet': True,
                 'skip_download': True,
             }
+            await ctx.send('***Working on it, this might take a sec...***')
             with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(url)
                 if 'entries' in info:
