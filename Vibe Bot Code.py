@@ -139,8 +139,8 @@ async def delq(ctx):
 
 @help.command()
 async def viewq(ctx):
-    embed = discord.Embed(title = "***viewq***", description = "View the current selections in the queue.", color = 0xa09c9c)
-    embed.add_field(name = "Syntax", value = "$viewq")
+    embed = discord.Embed(title = "***viewq***", description = "View the current selections in the queue (Default page number = 1).", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$viewq <queue page number>")
     embed.set_footer(text = "Vibe Bot")
     await ctx.send(embed = embed)
 

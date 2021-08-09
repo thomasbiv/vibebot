@@ -171,23 +171,47 @@ class audioFunctions(commands.Cog):
         else: 
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
+
             
 
     @commands.command(name="viewq", help=" - View the current selections in the queue.")
     @commands.has_role('Vibe Master')
-    async def viewq(self,ctx):
+    async def viewq(self,ctx, page_num = 1):
         embed = discord.Embed(color=0xa09c9c)
         if ctx.guild.id not in multiServerQueue:
             embed.title = "***No queue.***"
             return await ctx.send(embed = embed)
-        embed.title = ":notes: ***Current queue:***"
+        real_num = page_num - 1
+        queue_pages = []
+        page = []
+        k = 1
         for i in range(len(multiServerQueue[ctx.guild.id])):
-            if i == 0:
-                embed.add_field(name = "NP:" , value = multiServerQueue[ctx.guild.id][i].get('title', None), inline = False)
+            page.append(multiServerQueue[ctx.guild.id][i])
+            if k % 10 == 0:
+                temp = page.copy()
+                queue_pages.append(temp)
+                page.clear()
+            elif (k == len(multiServerQueue[ctx.guild.id])) and (k % 10 != 0):
+                queue_pages.append(page)
+            k = k + 1
+
+        if (page_num > len(queue_pages)) or (page_num <= 0):
+            return await ctx.send("Invalid page number. There are currently " + str(len(queue_pages)) + " page(s) in the queue.")
+        
+        embed.title = ":notes: ***Current queue:***"
+        key = page_num - 1
+        for j in range(len(queue_pages[real_num])):
+            if page_num == 1:
+                if j == 0:
+                    embed.add_field(name = "NP:" , value = queue_pages[real_num][j].get('title', None), inline = False)
+                else:
+                    embed.add_field(name = str(j) + ". ", value = queue_pages[real_num][j].get('title', None), inline = False)
             else:
-                embed.add_field(name = str(i) + ". ", value = multiServerQueue[ctx.guild.id][i].get('title', None), inline = False)
-        embed.set_footer(text = "Vibe Bot")
+                embed.add_field(name = str(key) + str(j) + ". ", value = queue_pages[real_num][j].get('title', None), inline = False)
+            
+        embed.set_footer(text = "Page " + str(page_num) + "/" + str(len(queue_pages)))
         await ctx.send(embed = embed)
+        
 
                 
 
