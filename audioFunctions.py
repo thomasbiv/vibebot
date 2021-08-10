@@ -79,6 +79,10 @@ class audioFunctions(commands.Cog):
             if voice.is_playing():
                 voice.pause()
                 await ctx.send("***Selection paused.*** :pause_button:")
+                await sleep(300) #Vibe Bot idles for 5 minutes when paused
+                if ctx.voice_client and ctx.guild.voice_client.is_paused(): #If bot is still connected and paused after sleep
+                    voice.resume()
+                    await ctx.send("Automatically resumed.")
             else:
                 await ctx.send("I am not playing any music to pause!")
         else:
@@ -227,7 +231,7 @@ class audioFunctions(commands.Cog):
             voice.stop()
             await ctx.send("Selection stopped.")
             await ctx.guild.voice_client.disconnect()
-            await ctx.send("I have left the voice channel.")
+            #await ctx.send("I have left the voice channel.")
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
