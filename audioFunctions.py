@@ -283,11 +283,7 @@ class audioFunctions(commands.Cog):
         if (ctx.author.voice):
             if ctx.guild.id not in multiServerQueue:
                 multiServerQueue[ctx.guild.id] = []
-            if not (ctx.voice_client):
-                channel = ctx.message.author.voice.channel
-                voice = await channel.connect()
-            else:
-                voice = ctx.guild.voice_client
+            
             ydl_opts = {
                 'quiet': True,
                 'skip_download': True,
@@ -311,6 +307,13 @@ class audioFunctions(commands.Cog):
                     return await ctx.send("Provided link is invalid.")
 
             await ctx.send('***The queue now contains ' + str(len(multiServerQueue[ctx.guild.id])) + ' selection(s)!***')
+
+            if not (ctx.voice_client):
+                channel = ctx.message.author.voice.channel
+                voice = await channel.connect()
+            else:
+                voice = ctx.guild.voice_client
+
             if not (voice.is_playing() or voice.is_paused()):
                 temp = self.bot.get_command(name='playq')
                 await temp.callback(self, ctx)
