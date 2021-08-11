@@ -15,10 +15,10 @@ import copy
 multiServerQueue = {}
 SHUFFLE_COND = 0
 
-
 class audioFunctions(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+    
 
     @commands.command(name="youtube", help=" - Search for a YouTube video!")
     @commands.has_role('Vibe Master')
@@ -150,7 +150,8 @@ class audioFunctions(commands.Cog):
             with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(link)
 
-            multiServerQueue[ctx.guild.id].append(info)
+            #multiServerQueue[ctx.guild.id].append(info)
+            multiServerQueue[ctx.guild.id].append({'url':info['formats'][0]['url'],'title':info['title']})
             await ctx.send("***Selection added to queue!*** :ok_hand:")
             await ctx.send('***The queue now contains ' + str(len(multiServerQueue[ctx.guild.id])) + ' selection(s)!***')
         else: 
@@ -264,7 +265,8 @@ class audioFunctions(commands.Cog):
             with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(url)
 
-            multiServerQueue[ctx.guild.id].append(info)
+            #multiServerQueue[ctx.guild.id].append(info)
+            multiServerQueue[ctx.guild.id].append({'url':info['formats'][0]['url'],'title':info['title']})
             await ctx.send('***Selection added to queue!*** :ok_hand:')
             await ctx.send('***The queue now contains ' + str(len(multiServerQueue[ctx.guild.id])) + ' selection(s)!***')
             if not (voice.is_playing() or voice.is_paused()):
@@ -299,8 +301,8 @@ class audioFunctions(commands.Cog):
                         newURL = i['formats'][0]['url']
                         newInfo = ydl.extract_info(newURL)
                         newInfo['title'] = i['title']
-                        multiServerQueue[ctx.guild.id].append(newInfo)
-                        # multiServerQueue[ctx.guild.id].append({'url':i['formats'][0]['url'],'title':i['title']})  possible to cut down data 
+                        #multiServerQueue[ctx.guild.id].append(newInfo)
+                        multiServerQueue[ctx.guild.id].append({'url':i['formats'][0]['url'],'title':i['title']})  #possible to cut down data 
                         
                     await ctx.send('***Playlist added to queue!*** :ok_hand:')
                 else:
@@ -336,7 +338,8 @@ class audioFunctions(commands.Cog):
             YDL_OPTIONS = {'format': "bestaudio"}
 
             with youtube_dl.YoutubeDL(YDL_OPTIONS) as ydl:
-                url2 = multiServerQueue[ctx.guild.id][0]['formats'][0]['url']
+                #url2 = multiServerQueue[ctx.guild.id][0]['formats'][0]['url']
+                url2 = multiServerQueue[ctx.guild.id][0].get('url', None)
                 source = await discord.FFmpegOpusAudio.from_probe(url2, **FFMPEG_OPTIONS)
                 voice.play(source)
             while voice.is_playing() or voice.is_paused():
