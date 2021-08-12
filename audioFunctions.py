@@ -43,9 +43,9 @@ class audioFunctions(commands.Cog):
         if connected:
             try:
                 await connected.channel.connect()
+                await ctx.send("I have joined the voice channel.")
             except Exception as error:
-                print(error)
-            await ctx.send("I have joined the voice channel.")
+                await ctx.send(error)
             if not (ctx.guild.voice_client.is_playing() or ctx.guild.voice_client.is_paused()):
                 await sleep(300) #Vibe Bot idles for 5 minutes when no music is played
                 if not (ctx.guild.voice_client.is_playing() or ctx.guild.voice_client.is_paused()): #Vibe Bot performs a second audio and voice check, just in case $leave was used while in sleep mode
@@ -291,6 +291,7 @@ class audioFunctions(commands.Cog):
             await ctx.send('***Working on it, this might take a sec...***')
             with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(url)
+            
                 if 'entries' in info:
                     await ctx.send('***Loading playlist...***')
                     for i in info['entries']:
