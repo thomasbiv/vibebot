@@ -144,7 +144,7 @@ class audioFunctions(commands.Cog):
 
             # multiServerQueue[ctx.guild.id].append(info)
             multiServerQueue[ctx.guild.id].append(
-                {'url': info['formats'][0]['url'], 'title': info['title']})
+                {'url': info['formats'][0]['url'], 'title': info['title'], 'from_playlist': False})
             await ctx.send("***Selection added to queue!*** :ok_hand:")
             await ctx.send('***The queue now contains ' + str(len(multiServerQueue[ctx.guild.id])) + ' selection(s)!***')
         else:
@@ -254,7 +254,7 @@ class audioFunctions(commands.Cog):
 
             # multiServerQueue[ctx.guild.id].append(info)
             multiServerQueue[ctx.guild.id].append(
-                {'url': info['formats'][0]['url'], 'title': info['title']})
+                {'url': info['formats'][0]['url'], 'title': info['title'], 'from_playlist': False})
             await ctx.send('***Selection added to queue!*** :ok_hand:')
             await ctx.send('***The queue now contains ' + str(len(multiServerQueue[ctx.guild.id])) + ' selection(s)!***')
             if not (voice.is_playing() or voice.is_paused()):
@@ -267,55 +267,50 @@ class audioFunctions(commands.Cog):
     @commands.command(name="playlist", help=" - Play a playlist off of YouTube using a playlist url. Adds to queue.")
     @commands.has_role('Vibe Master')
     async def playlist(self, ctx, url: str):
-        try:
-            if (ctx.author.voice):
-                if ctx.guild.id not in multiServerQueue:
-                    multiServerQueue[ctx.guild.id] = []
+        if (ctx.author.voice):
+            if ctx.guild.id not in multiServerQueue:
+                multiServerQueue[ctx.guild.id] = []
 
-                ydl_opts = {
-                    'quiet': True,
-                    'skip_download': True,
-                    'dump_single_json': True,
-                    'extract_flat': True
-                }
-                await ctx.send('***Working on it, this might take a sec...***')
-                with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-                    info = ydl.extract_info(url, download=False)
-                    if 'entries' in info:
-                        await ctx.send('***Loading playlist...***')
-                        for i in info['entries']:
-                            try:
-                                # newInfo = ydl.extract_info(i['url'], download=False) if playlist true do this in playq, else normal workflow
-                                multiServerQueue[ctx.guild.id].append(
-                                    {'url': i['url'],
-                                     'title': i['title'],
-                                     'playlist': True
-                                     })
-                            except Exception as error:
-                                print(error)
+            ydl_opts = {
+                'quiet': True,
+                'skip_download': True,
+                'dump_single_json': True,
+                'extract_flat': True
+            }
+            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                info = ydl.extract_info(url, download=False)
+                if 'entries' in info:
+                    await ctx.send('***Loading playlist...***')
+                    for i in info['entries']:
+                        try:
+                            # newInfo = ydl.extract_info(i['url'], download=False) if playlist true do this in playq, else normal workflow
+                            multiServerQueue[ctx.guild.id].append(
+                                {   'url': i['url'],
+                                    'title': i['title'],
+                                    'from_playlist': True
+                                })
+                        except Exception as error:
+                            print(error)
 
-                        await ctx.send('***Playlist added to queue!*** :ok_hand:')
-                    else:
-                        if len(multiServerQueue[ctx.guild.id]) < 1:
-                            temp = self.bot.get_command(name='clear')
-                            await temp.callback(self, ctx)
-                        return await ctx.send("Provided link is invalid.")
-
-                    if not (ctx.voice_client):
-                        channel = ctx.message.author.voice.channel
-                        voice = await channel.connect()
-                    else:
-                        voice = ctx.guild.voice_client
-                    if not (voice.is_playing() or voice.is_paused()):
-                        temp = self.bot.get_command(name='playq')
+                    await ctx.send('***Playlist added to queue!*** :ok_hand:')
+                    await ctx.send('***The queue now contains ' + str(len(multiServerQueue[ctx.guild.id])) + ' selection(s)!***')
+                else:
+                    if len(multiServerQueue[ctx.guild.id]) < 1:
+                        temp = self.bot.get_command(name='clear')
                         await temp.callback(self, ctx)
+                    return await ctx.send("Provided link is invalid.")
 
-                await ctx.send('***The queue now contains ' + str(len(multiServerQueue[ctx.guild.id])) + ' selection(s)!***')
+                if not (ctx.voice_client):
+                    channel = ctx.message.author.voice.channel
+                    voice = await channel.connect()
+                else:
+                    voice = ctx.guild.voice_client
+                if not (voice.is_playing() or voice.is_paused()):
+                    temp = self.bot.get_command(name='playq')
+                    await temp.callback(self, ctx)
 
-            else:
-                await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
-        except Exception as error:
-            print(error)
+        else:
+            await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
             
 
 
@@ -337,7 +332,11 @@ class audioFunctions(commands.Cog):
 
             with youtube_dl.YoutubeDL(YDL_OPTIONS) as ydl:
                 # url2 = multiServerQueue[ctx.guild.id][0]['formats'][0]['url']
-                url2 = multiServerQueue[ctx.guild.id][0].get('url', None)
+                if multiServerQueue[ctx.guild.id][0]['from_playlist'] == True:
+                    url2 = ydl.extract_info(multiServerQueue[ctx.guild.id][0]['url'], download=False)
+                    url2 = url2['formats'][0]['url']
+                else:
+                    url2 = multiServerQueue[ctx.guild.id][0].get('url', None)
                 source = await discord.FFmpegOpusAudio.from_probe(url2, **FFMPEG_OPTIONS)
                 voice.play(source)
             while voice.is_playing() or voice.is_paused():
