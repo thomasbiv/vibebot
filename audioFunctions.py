@@ -196,17 +196,13 @@ class audioFunctions(commands.Cog):
         for j in range(len(queue_pages[real_num])):
             if page_num == 1:
                 if j == 0:
-                    embed.add_field(name="NP:", value=queue_pages[real_num][j].get(
-                        'title', None), inline=False)
+                    embed.add_field(name="NP:", value=queue_pages[real_num][j].get('title', None), inline=False)
                 else:
-                    embed.add_field(name=str(
-                        j) + ". ", value=queue_pages[real_num][j].get('title', None), inline=False)
+                    embed.add_field(name=str(j) + ". ", value=queue_pages[real_num][j].get('title', None), inline=False)
             else:
-                embed.add_field(name=str(
-                    key) + str(j) + ". ", value=queue_pages[real_num][j].get('title', None), inline=False)
+                embed.add_field(name=str(key) + str(j) + ". ", value=queue_pages[real_num][j].get('title', None), inline=False)
 
-        embed.set_footer(text="Page " + str(page_num) +
-                         "/" + str(len(queue_pages)))
+        embed.set_footer(text="Page " + str(page_num) +"/" + str(len(queue_pages)))
         await ctx.send(embed=embed)
 
     @commands.command(name="clear", help=" - Stop the current selection being played and clears the queue.")
