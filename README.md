@@ -2,7 +2,7 @@
 *Discord music/party bot.*
 
 Vibe Bot is a simple and easy-to-use Discord bot created for the purpose of music and various other functionalities.
-This is a personal project of mine that I constantly am updating, so I hope you enjoy using it!
+This is a personal project of mine that I constantly am updating/fixing, so I hope you enjoy using it!
 
 ### NOTE:
 
@@ -83,8 +83,84 @@ Before linking your bot, it is recommended that your bot is added to your server
 
 After this has been completed, Vibe Bot should be fully operational. Run the bot, and type ```$help``` in discord text chat to view all available command information. Enjoy!
 
+## Commands Summary
+
+Below is a list of all the current commands with descriptions.
+
+### Useful Functions
+
+* help
+  * Description: View information on all commands or on a specified command.
+  * Syntax: ```$help``` or ```$help <command name>```
+* roll
+  * Description: Roll a die with the requested amount of sides.
+  * Syntax: ```$roll <amount>```
+* ping
+  * Description: Display the latency of Vibe Bot.
+  * Syntax: ```$ping```
+* eightball
+  * Description: Ask a question to the Magic 8 Ball and recieve your fortune...
+  * Syntax: ```$eightball <question>```
+* purge
+  * Description: Purges (clears) the last specified amount of messages (Default = 5).
+  * Syntax: ```$purge <amount>```
+
+### Audio Functions
+
+* youtube
+  * Description: Search for a YouTube video!
+  * Syntax: ```$youtube <query>```
+* join
+  * Description: Have Vibe Bot join your voice channel.
+  * Syntax: ```$join```
+* leave
+  * Description: Have Vibe Bot leave your voice channel.
+  * Syntax: ```$leave```
+* pause
+  * Description: Pause the current selection being played in the voice channel.
+  * Syntax: ```$pause```
+* resume
+  * Description: Resume the current selection that is paused in the voice channel.
+  * Syntax: ```$resume```
+* skipq
+  * Description: Skip the specified amount of selections in the queue (Default = 1).
+  * Syntax: ```$skipq <amount>```
+* enq
+  * Description: Add audio from YouTube to the queue.
+  * Syntax: ```$enq <query or link>```
+* delq
+  * Description: Delete the specified selection in the queue.
+  * Syntax: ```$delq <number>```
+* viewq
+  * Description: View the current selections in the queue (Default page number = 1).
+  * Syntax: ```$viewq <queue page number>```
+* clear
+  * Description: Stop the current selection being played and clear the queue.
+  * Syntax: ```$clear```
+* play
+  * Description: Play audio from YouTube using keywords or a url. Also adds to queue.
+  * Syntax: ```$play <query or link>```
+* playq
+  * Description: Play the current queue.
+  * Syntax: ```$playq```
+* shuffleq
+  * Description: Shuffle the current queue.
+  * Syntax: ```$shuffleq```
+* replay
+  * Description: Restart the current selection from the beginning.
+  * Syntax: ```$replay```
+* playlist
+  * Description: Play a playlist off of YouTube using a playlist url. Adds to queue.
+  * Syntax: ```$playlist <youtube playlist link>```
+
+More commands are planned to be added soon! If you have any questions or suggestions feel free to message me on Twitter:
+
+---------------------------
 
 Thomas Bivins
 
+[@thomasbiv](https://twitter.com/thomasbiv)
+
 USF Computer Engineering
 
+---------------------------
