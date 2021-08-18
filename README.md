@@ -1,7 +1,7 @@
 # vibebot
 *Discord music/party bot.*
 
-Vibe Bot is a simple and easy-to-use Discord bot created for the purpose of music amd various other functionalities.
+Vibe Bot is a simple and easy-to-use Discord bot created for the purpose of music and various other functionalities.
 This is a personal project of mine that I constantly am updating, so I hope you enjoy using it!
 
 ### NOTE:
