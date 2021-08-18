@@ -71,15 +71,15 @@ pip install PyNaCl
 
 For a more customized experience or for additional help, the full PyNaCl documentation can be found [here.](https://pynacl.readthedocs.io/en/latest/install/)
 
-## Keys
+## Tokens
 
-After all required libraries are installed, the connection between your discord bot and the code can be made. All discord bots have a special key that allows developers to access them. This key is extremely important and should only be seen by you.
+After all required libraries are installed, the connection between your discord bot and the code can be made. All discord bots have a special token that allows developers to access them. This token is extremely important and should only be seen by you.
 
 ### IMPORTANT NOTE:
 
-Do **NOT** upload your key to any website for any reason or give your key to anyone you do not trust with the utmost certainty. When someone has access to your key, they also have access to your bot which means it is possible for them to use your bot with malicious intent.
+Do **NOT** upload your token to any website for any reason or give your token to anyone you do not trust with the utmost certainty. When someone has access to your token, they also have access to your bot which means it is possible for them to use your bot with malicious intent.
 
-Before linking your bot, it is recommended that your bot is added to your server of choice first. To link your discord bot to the python code present here, open your preferred coding environment and replace the placeholder text next to 'DISCORD_TOKEN = ' with your unique key. Then, rename ```sample.env``` to simply ```.env```
+Before linking your bot, it is recommended that your bot is added to your server of choice first. To link your discord bot to the python code present here, open your preferred coding environment and replace the placeholder text next to 'DISCORD_TOKEN = ' with your unique token. Then, rename ```sample.env``` to simply ```.env```
 
 After this has been completed, Vibe Bot should be fully operational. Run the bot, and type ```$help``` in discord text chat to view all available command information. Enjoy!
 
