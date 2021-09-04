@@ -399,6 +399,27 @@ class audioFunctions(commands.Cog):
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
+    
+    
+    
+    @commands.command(name="currsong", help=" - View the name of the current selection.")
+    @commands.has_role('Vibe Master')
+    async def currsong(self, ctx):
+        if (ctx.author.voice):
+            if ctx.voice_client:
+                voice = ctx.guild.voice_client
+                if voice.is_playing() or voice.is_paused():
+                    await ctx.send("***The current selection is '" + multiServerQueue[ctx.guild.id][0]['title'] + "'!***")
+                else:
+                    await ctx.send("I am not playing anything!")
+            else:
+                await ctx.send("I am not connected to a voice channel.")
+        else:
+            await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
+
+
+    
+
             
 
 
