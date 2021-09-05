@@ -152,6 +152,9 @@ Below is a list of all the current commands with descriptions.
 * playlist
   * Description: Play a playlist off of YouTube using a playlist url. Adds to queue.
   * Syntax: ```$playlist <youtube playlist link>```
+* currsong
+  * Description: View the name of the current selection.
+  * Syntax: ```$currsong```
 
 More commands are planned to be added soon! If you have any questions or suggestions feel free to message me on Twitter:
 
