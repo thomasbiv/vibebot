@@ -417,6 +417,39 @@ class audioFunctions(commands.Cog):
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
+    
+
+
+    @commands.command(name="moveto", help=" - Move a selection to a different spot in the queue.")
+    @commands.has_role('Vibe Master')
+    async def moveto(self, ctx, currSpot : int, toSpot : int):
+        if (ctx.author.voice):
+            if ctx.voice_client:
+                voice = ctx.guild.voice_client
+                if ctx.guild.id not in multiServerQueue:
+                    await ctx.send("Nothing in the current queue.")
+                else:
+                    try:
+                        multiServerQueue[ctx.guild.id].insert(toSpot, multiServerQueue[ctx.guild.id][currSpot])
+
+                        if currSpot > toSpot:
+                            del(multiServerQueue[ctx.guild.id][currSpot + 1])
+                        elif currSpot <= toSpot:
+                            del(multiServerQueue[ctx.guild.id][currSpot]) #REVIEW
+                        
+                        if currSpot == 0 or toSpot == 0:
+                            global SHUFFLE_COND
+                            SHUFFLE_COND = 1
+                            voice.stop()
+                        
+                        await ctx.send("***Selection moved!*** :thumbsup:")
+                    except:
+                        await ctx.send("The specified indices are out of range.")
+            else:
+                await ctx.send("I am not connected to a voice channel.")
+        else:
+            await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
+
 
     
 
