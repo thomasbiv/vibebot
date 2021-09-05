@@ -155,6 +155,9 @@ Below is a list of all the current commands with descriptions.
 * currsong
   * Description: View the name of the current selection.
   * Syntax: ```$currsong```
+* moveto
+  * Description: Move a selection to a different spot in the queue.
+  * Syntax: ```$moveto <index of selection to move> <index to move selection to>```
 
 More commands are planned to be added soon! If you have any questions or suggestions feel free to message me on Twitter:
 
