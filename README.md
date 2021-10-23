@@ -158,6 +158,13 @@ Below is a list of all the current commands with descriptions.
 * moveto
   * Description: Move a selection to a different spot in the queue.
   * Syntax: ```$moveto <index of selection to move> <index to move selection to>```
+* repeat
+  * Description: Repeat the current selection a given amount of times (DEFAULT/MAX = 20).
+  * Syntax: ```$repeat <num of repeats>```
+* repeatnum
+  * Description: View the remaining repetitions left on a selection.
+  * Syntax: ```$repeatnum```
+
 
 More commands are planned to be added soon! If you have any questions or suggestions feel free to message me on Twitter:
 
