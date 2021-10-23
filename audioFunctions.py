@@ -1,3 +1,4 @@
+from asyncio.events import AbstractEventLoopPolicy
 import discord
 from discord.ext.commands import bot
 from discord.ext import commands
@@ -14,6 +15,7 @@ import queue
 import copy
 multiServerQueue = {}
 SHUFFLE_COND = 0
+REPEAT_NUM = 0 #####
 
 
 class audioFunctions(commands.Cog):
@@ -104,6 +106,10 @@ class audioFunctions(commands.Cog):
     async def skipq(self, ctx, amt=0):
         if (ctx.author.voice):
             voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
+            global REPEAT_NUM #####
+            global SHUFFLE_COND #####
+            SHUFFLE_COND = 0 #####
+            REPEAT_NUM = 0 #####
             if (amt > 0):
                 if (amt > len(multiServerQueue[ctx.guild.id])):
                     await ctx.send("Amount requested exceeds range of queue. Skipping current selection.")
@@ -211,6 +217,10 @@ class audioFunctions(commands.Cog):
         if (ctx.author.voice):
             if ctx.guild.id not in multiServerQueue:
                 return await ctx.send('No queue.')
+            global REPEAT_NUM
+            global SHUFFLE_COND
+            SHUFFLE_COND = 0
+            REPEAT_NUM = 0
             multiServerQueue.pop(ctx.guild.id, None)
             await ctx.send("***Queue cleared.***")
             voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
@@ -338,8 +348,13 @@ class audioFunctions(commands.Cog):
             while voice.is_playing() or voice.is_paused():
                 await sleep(1)
             global SHUFFLE_COND
-            if SHUFFLE_COND == 1:
+            global REPEAT_NUM #####
+            if REPEAT_NUM != 0: #####
+                REPEAT_NUM = REPEAT_NUM - 1 #####
+            if SHUFFLE_COND == 1 and REPEAT_NUM == 0: #####LAST SONG CASE / SHUFFLE CASE
                 SHUFFLE_COND = 0
+            elif SHUFFLE_COND == 1 and REPEAT_NUM != 0:
+                SHUFFLE_COND = 1
             else:
                 del(multiServerQueue[ctx.guild.id][int(0)])
             if len(multiServerQueue[ctx.guild.id]) != 0:
@@ -363,7 +378,9 @@ class audioFunctions(commands.Cog):
                 if ctx.guild.id not in multiServerQueue:
                     return await ctx.send("Nothing in the current queue.")
                 global SHUFFLE_COND
+                global REPEAT_NUM
                 SHUFFLE_COND = 1
+                REPEAT_NUM = 0
                 random.shuffle(multiServerQueue[ctx.guild.id])
                 if not (ctx.voice_client):
                     channel = ctx.message.author.voice.channel
@@ -430,7 +447,10 @@ class audioFunctions(commands.Cog):
                     await ctx.send("Nothing in the current queue.")
                 else:
                     try:
-                        multiServerQueue[ctx.guild.id].insert(toSpot, multiServerQueue[ctx.guild.id][currSpot])
+                        if currSpot <= toSpot:
+                            multiServerQueue[ctx.guild.id].insert(toSpot + 1, multiServerQueue[ctx.guild.id][currSpot])
+                        else:
+                            multiServerQueue[ctx.guild.id].insert(toSpot, multiServerQueue[ctx.guild.id][currSpot])
 
                         if currSpot > toSpot:
                             del(multiServerQueue[ctx.guild.id][currSpot + 1])
@@ -438,8 +458,10 @@ class audioFunctions(commands.Cog):
                             del(multiServerQueue[ctx.guild.id][currSpot]) #REVIEW
                         
                         if currSpot == 0 or toSpot == 0:
-                            global SHUFFLE_COND
-                            SHUFFLE_COND = 1
+                            global SHUFFLE_COND 
+                            global REPEAT_NUM #####
+                            SHUFFLE_COND = 1 
+                            REPEAT_NUM = 0 #####
                             voice.stop()
                         
                         await ctx.send("***Selection moved!*** :thumbsup:")
@@ -450,6 +472,52 @@ class audioFunctions(commands.Cog):
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
+
+
+    @commands.command(name="repeat", help=" - Repeat the current selection a given amount of times (DEFAULT/MAX = 20).")
+    @commands.has_role('Vibe Master')
+    async def repeat(self, ctx, num : int = 20):
+        if (ctx.author.voice):
+            if ctx.voice_client:
+                voice = ctx.guild.voice_client
+                if voice.is_playing() or voice.is_paused():
+                    global REPEAT_NUM
+                    global SHUFFLE_COND
+                    if REPEAT_NUM == 1:
+                        await ctx.send("Selection already repeating.")
+                    else:
+                        if num > 20 or num < 1:
+                            await ctx.send("Invalid repetition number. Number must be less than 20 and greater than 0.")
+                        else:
+                            REPEAT_NUM = num
+                            SHUFFLE_COND = 1
+                            await ctx.send("***The current selection will repeat '" + str(num) + "'  more time(s)!***")
+                else:
+                    await ctx.send("I am not playing anything!")
+            else:
+                await ctx.send("I am not connected to a voice channel.")
+        else:
+            await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
+
+    @commands.command(name="repeatnum", help=" - View the remaining repetitions left on a selection.")
+    @commands.has_role('Vibe Master')
+    async def repeatnum(self, ctx):
+        if (ctx.author.voice):
+            if ctx.voice_client:
+                voice = ctx.guild.voice_client
+                if voice.is_playing() or voice.is_paused():
+                    if REPEAT_NUM != 0:
+                        await ctx.send("***The current selection will repeat '" + str(REPEAT_NUM) + "' more time(s)!***")
+                    else:
+                        await ctx.send("This selection is not set to repeat.")
+                else:
+                    await ctx.send("I am not playing anything!")
+            else:
+                await ctx.send("I am not connected to a voice channel.")
+        else:
+            await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
+
+    
 
     
 

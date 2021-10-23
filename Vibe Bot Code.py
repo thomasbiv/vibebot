@@ -49,7 +49,7 @@ async def on_command_error(ctx, error):
 async def help(ctx):
     embed = discord.Embed(title = "***Help***", description = "For more information on a specific command, type $help <command>", color = 0xa09c9c)
     embed.add_field(name = "Useful Functions", value = "roll | ping | eightball | purge", inline=False)
-    embed.add_field(name = "Audio Functions", value = "youtube | join | leave | pause | resume | skipq | enq | delq | viewq | clear | play | playq | shuffleq | replay | playlist | currsong | moveto", inline=False)
+    embed.add_field(name = "Audio Functions", value = "youtube | join | leave | pause | resume | skipq | enq | delq | viewq | clear | play | playq | shuffleq | replay | playlist | currsong | moveto | repeat | repeatnum", inline=False)
     embed.set_footer(text = "Vibe Bot")
     await ctx.send(embed = embed)
 
@@ -197,6 +197,20 @@ async def currsong(ctx):
 async def moveto(ctx):
     embed = discord.Embed(title = "***moveto***", description = "Move a selection to a different spot in the queue.", color = 0xa09c9c)
     embed.add_field(name = "Syntax", value = "$moveto <index of selection to move> <index to move selection to>")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def repeat(ctx):
+    embed = discord.Embed(title = "***repeat***", description = "Repeat the current selection a given amount of times (DEFAULT/MAX = 20).", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$repeat <num of repeats>")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def repeatnum(ctx):
+    embed = discord.Embed(title = "***repeatnum***", description = "View the remaining repetitions left on a selection.", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$repeatnum")
     embed.set_footer(text = "Vibe Bot")
     await ctx.send(embed = embed)
 
