@@ -483,15 +483,12 @@ class audioFunctions(commands.Cog):
                 if voice.is_playing() or voice.is_paused():
                     global REPEAT_NUM
                     global SHUFFLE_COND
-                    if REPEAT_NUM == 1:
-                        await ctx.send("Selection already repeating.")
+                    if num > 20 or num < 1:
+                        await ctx.send("Invalid repetition number. Number must be less than 20 and greater than 0.")
                     else:
-                        if num > 20 or num < 1:
-                            await ctx.send("Invalid repetition number. Number must be less than 20 and greater than 0.")
-                        else:
-                            REPEAT_NUM = num
-                            SHUFFLE_COND = 1
-                            await ctx.send("***The current selection will repeat '" + str(num) + "'  more time(s)!***")
+                        REPEAT_NUM = num
+                        SHUFFLE_COND = 1
+                        await ctx.send("***The current selection will repeat '" + str(num) + "'  more time(s)!***")
                 else:
                     await ctx.send("I am not playing anything!")
             else:
