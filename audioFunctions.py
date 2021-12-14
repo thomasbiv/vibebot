@@ -15,12 +15,21 @@ import queue
 import copy
 multiServerQueue = {}
 SHUFFLE_COND = 0
-REPEAT_NUM = 0 #####
+REPEAT_NUM = 0
 
 
 class audioFunctions(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
+
+
+
+
+
+
+
+
 
     @commands.command(name="youtube", help=" - Search for a YouTube video!")
     @commands.has_role('Vibe Master')
@@ -35,6 +44,15 @@ class audioFunctions(commands.Cog):
             r"watch\?v=(\S{11})", htm_content.read().decode())
         link = 'http://www.youtube.com/watch?v=' + search_results[0]
         await ctx.send(link)
+
+
+
+
+
+
+
+
+
 
     @commands.command(name="join", help=" - Have Vibe Bot join your voice channel.")
     @commands.has_role('Vibe Master')
@@ -58,6 +76,15 @@ class audioFunctions(commands.Cog):
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
+
+
+
+
+
+
+
+
+
     @commands.command(pass_context=True, name="leave", help=" - Have Vibe Bot leave your voice channel.")
     @commands.has_role('Vibe Master')
     async def leave(self, ctx):
@@ -69,6 +96,15 @@ class audioFunctions(commands.Cog):
                 await ctx.send("I am not in a voice channel.")
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
+
+
+
+
+
+
+
+
+
 
     @commands.command(pass_context=True, name="pause", help=" - Pause the current selection being played in a voice channel.")
     @commands.has_role('Vibe Master')
@@ -88,6 +124,15 @@ class audioFunctions(commands.Cog):
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
+
+
+
+
+
+
+
+
+
     @commands.command(pass_context=True, name="resume", help=" - Resume the current selection that is paused in the voice channel.")
     @commands.has_role('Vibe Master')
     async def resume(self, ctx):
@@ -101,15 +146,24 @@ class audioFunctions(commands.Cog):
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
+
+
+
+
+
+
+
+
+
     @commands.command(pass_context=True, name="skipq", help=" - Skip the specified amount of selections in the queue.")
     @commands.has_role('Vibe Master')
     async def skipq(self, ctx, amt=0):
         if (ctx.author.voice):
             voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
-            global REPEAT_NUM #####
-            global SHUFFLE_COND #####
-            SHUFFLE_COND = 0 #####
-            REPEAT_NUM = 0 #####
+            global REPEAT_NUM
+            global SHUFFLE_COND
+            SHUFFLE_COND = 0
+            REPEAT_NUM = 0
             if (amt > 0):
                 if (amt > len(multiServerQueue[ctx.guild.id])):
                     await ctx.send("Amount requested exceeds range of queue. Skipping current selection.")
@@ -124,6 +178,15 @@ class audioFunctions(commands.Cog):
                 await ctx.send("I have left the voice channel.")
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
+
+
+
+
+
+
+
+
+
 
     @commands.command(name="enq", help=" - Add audio from YouTube to the queue.")
     @commands.has_role('Vibe Master')
@@ -148,13 +211,21 @@ class audioFunctions(commands.Cog):
             with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(link)
 
-            # multiServerQueue[ctx.guild.id].append(info)
             multiServerQueue[ctx.guild.id].append(
                 {'url': info['formats'][0]['url'], 'title': info['title'], 'from_playlist': False})
             await ctx.send("***Selection added to queue!*** :ok_hand:")
             await ctx.send('***The queue now contains ' + str(len(multiServerQueue[ctx.guild.id])) + ' selection(s)!***')
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
+
+
+
+
+
+
+
+
+
 
     @commands.command(name="delq", help=" - Delete the specified selection in the queue.")
     @commands.has_role('Vibe Master')
@@ -172,6 +243,15 @@ class audioFunctions(commands.Cog):
                 await ctx.send("The specified selection is out of range.")
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
+
+
+
+
+
+
+
+
+
 
     @commands.command(name="viewq", help=" - View the current selections in the queue.")
     @commands.has_role('Vibe Master')
@@ -211,6 +291,15 @@ class audioFunctions(commands.Cog):
         embed.set_footer(text="Page " + str(page_num) +"/" + str(len(queue_pages)))
         await ctx.send(embed=embed)
 
+
+
+
+
+
+
+
+
+
     @commands.command(name="clear", help=" - Stop the current selection being played and clears the queue.")
     @commands.has_role('Vibe Master')
     async def clear(self, ctx):
@@ -227,9 +316,17 @@ class audioFunctions(commands.Cog):
             voice.stop()
             await ctx.send("Selection stopped.")
             await ctx.guild.voice_client.disconnect()
-            # await ctx.send("I have left the voice channel.")
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
+
+
+
+
+
+
+
+
+
 
     @commands.command(name="play", help=" - Play audio off of YouTube using keywords or url. Also adds to queue.")
     @commands.has_role('Vibe Master')
@@ -258,7 +355,6 @@ class audioFunctions(commands.Cog):
             with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(url)
 
-            # multiServerQueue[ctx.guild.id].append(info)
             multiServerQueue[ctx.guild.id].append(
                 {'url': info['formats'][0]['url'], 'title': info['title'], 'from_playlist': False})
             await ctx.send('***Selection added to queue!*** :ok_hand:')
@@ -269,6 +365,15 @@ class audioFunctions(commands.Cog):
 
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
+
+
+
+
+
+
+
+
+
 
     @commands.command(name="playlist", help=" - Play a playlist off of YouTube using a playlist url. Adds to queue.")
     @commands.has_role('Vibe Master')
@@ -320,6 +425,14 @@ class audioFunctions(commands.Cog):
             
 
 
+
+
+
+
+
+
+
+
     @commands.command(name="playq", help=" - Play the current queue.")
     @commands.has_role('Vibe Master')
     async def playq(self, ctx):
@@ -337,7 +450,6 @@ class audioFunctions(commands.Cog):
             YDL_OPTIONS = {'format': "bestaudio"}
 
             with youtube_dl.YoutubeDL(YDL_OPTIONS) as ydl:
-                # url2 = multiServerQueue[ctx.guild.id][0]['formats'][0]['url']
                 if multiServerQueue[ctx.guild.id][0]['from_playlist'] == True:
                     url2 = ydl.extract_info(multiServerQueue[ctx.guild.id][0]['url'], download=False)
                     url2 = url2['formats'][0]['url']
@@ -348,10 +460,10 @@ class audioFunctions(commands.Cog):
             while voice.is_playing() or voice.is_paused():
                 await sleep(1)
             global SHUFFLE_COND
-            global REPEAT_NUM #####
-            if REPEAT_NUM != 0: #####
-                REPEAT_NUM = REPEAT_NUM - 1 #####
-            if SHUFFLE_COND == 1 and REPEAT_NUM == 0: #####LAST SONG CASE / SHUFFLE CASE
+            global REPEAT_NUM
+            if REPEAT_NUM != 0:
+                REPEAT_NUM = REPEAT_NUM - 1
+            if SHUFFLE_COND == 1 and REPEAT_NUM == 0: #LAST SONG CASE / SHUFFLE CASE
                 SHUFFLE_COND = 0
             elif SHUFFLE_COND == 1 and REPEAT_NUM != 0:
                 SHUFFLE_COND = 1
@@ -369,6 +481,13 @@ class audioFunctions(commands.Cog):
 
 
             
+
+
+
+
+
+
+
 
     @commands.command(name="shuffleq", help=" - Shuffle the current queue.")
     @commands.has_role('Vibe Master')
@@ -398,6 +517,13 @@ class audioFunctions(commands.Cog):
 
 
 
+
+
+
+
+
+
+
     @commands.command(name="replay", help=" - Restart the current selection from the beginning.")
     @commands.has_role('Vibe Master')
     async def restart(self, ctx):
@@ -419,6 +545,12 @@ class audioFunctions(commands.Cog):
     
     
     
+
+
+
+
+
+
     @commands.command(name="currsong", help=" - View the name of the current selection.")
     @commands.has_role('Vibe Master')
     async def currsong(self, ctx):
@@ -435,6 +567,13 @@ class audioFunctions(commands.Cog):
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
     
+
+
+
+
+
+
+
 
 
     @commands.command(name="moveto", help=" - Move a selection to a different spot in the queue.")
@@ -455,13 +594,13 @@ class audioFunctions(commands.Cog):
                         if currSpot > toSpot:
                             del(multiServerQueue[ctx.guild.id][currSpot + 1])
                         elif currSpot <= toSpot:
-                            del(multiServerQueue[ctx.guild.id][currSpot]) #REVIEW
+                            del(multiServerQueue[ctx.guild.id][currSpot])
                         
                         if currSpot == 0 or toSpot == 0:
                             global SHUFFLE_COND 
-                            global REPEAT_NUM #####
+                            global REPEAT_NUM
                             SHUFFLE_COND = 1 
-                            REPEAT_NUM = 0 #####
+                            REPEAT_NUM = 0
                             voice.stop()
                         
                         await ctx.send("***Selection moved!*** :thumbsup:")
@@ -471,6 +610,13 @@ class audioFunctions(commands.Cog):
                 await ctx.send("I am not connected to a voice channel.")
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
+
+
+
+
+
+
+
 
 
 
@@ -495,6 +641,15 @@ class audioFunctions(commands.Cog):
                 await ctx.send("I am not connected to a voice channel.")
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
+
+
+
+
+
+
+
+
+
 
     @commands.command(name="repeatnum", help=" - View the remaining repetitions left on a selection.")
     @commands.has_role('Vibe Master')
