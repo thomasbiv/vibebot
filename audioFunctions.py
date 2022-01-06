@@ -1,5 +1,6 @@
 from asyncio.events import AbstractEventLoopPolicy
 import discord
+from discord import colour
 from discord.ext.commands import bot
 from discord.ext import commands
 from discord import FFmpegPCMAudio
@@ -13,10 +14,16 @@ import json
 import os
 import queue
 import copy
+import typing as t
+import aiohttp
 multiServerQueue = {}
 SHUFFLE_COND = 0
 REPEAT_NUM = 0
 
+LYRICS_URL = "https://some-random-api.ml/lyrics?title="
+
+class NoLyricsFound(commands.CommandError):
+    pass
 
 class audioFunctions(commands.Cog):
     def __init__(self, bot):
@@ -668,6 +675,54 @@ class audioFunctions(commands.Cog):
                 await ctx.send("I am not connected to a voice channel.")
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
+
+    
+
+    @commands.command(name = "lyrics", help = " - Get the lyrics of a specified selection in the queue.")
+    @commands.has_role('Vibe Master')
+    async def lyrics(self, ctx, locale = 0):
+        if (ctx.author.voice):
+            if ctx.voice_client:
+                voice = ctx.guild.voice_client
+                if ctx.guild.id not in multiServerQueue:
+                    return await ctx.send("No selections in queue.")
+                else:
+                    if locale > len(multiServerQueue[ctx.guild.id]) or locale < 0:
+                        return await ctx.send("Specified index out of range.")
+                    else:
+                        name = multiServerQueue[ctx.guild.id][locale].get('title', None)
+                        async with ctx.typing():
+                            async with aiohttp.request("GET", LYRICS_URL + name, headers={}) as r:
+                                if not 200 <= r.status <= 299:
+                                    raise NoLyricsFound
+
+                                data = await r.json()
+
+                                #if len(data["lyrics"]) > 2000:
+                                #    return await ctx.send(f"<{data['links']['genius']}>")
+
+                                embed = discord.Embed(
+                                    title = data["title"],
+                                    description = data["lyrics"],
+                                    colour=0xa09c9c,
+                                )
+                                
+                                embed.set_thumbnail(url=data["thumbnail"]["genius"])
+                                embed.set_author(name=data["author"])
+                                embed.set_footer(text = "Vibe Bot")
+                                await ctx.send(embed=embed)
+            else:
+                return await ctx.send("I am not connected to a voice channel.")
+        else:
+            return await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
+
+    
+
+
+    @lyrics.error
+    async def lyrics_error(self, ctx, exc):
+        if isinstance(exc, NoLyricsFound):
+            await ctx.send("No lyrics could be found.")
 
     
 

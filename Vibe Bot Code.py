@@ -49,7 +49,7 @@ async def on_command_error(ctx, error):
 async def help(ctx):
     embed = discord.Embed(title = "***Help***", description = "For more information on a specific command, type $help <command>", color = 0xa09c9c)
     embed.add_field(name = "Useful Functions", value = "roll | ping | eightball | purge", inline=False)
-    embed.add_field(name = "Audio Functions", value = "youtube | join | leave | pause | resume | skipq | enq | delq | viewq | clear | play | playq | shuffleq | replay | playlist | currsong | moveto | repeat | repeatnum", inline=False)
+    embed.add_field(name = "Audio Functions", value = "youtube | join | leave | pause | resume | skipq | enq | delq | viewq | clear | play | playq | shuffleq | replay | playlist | currsong | moveto | repeat | repeatnum | lyrics", inline=False)
     embed.set_footer(text = "Vibe Bot")
     await ctx.send(embed = embed)
 
@@ -211,6 +211,13 @@ async def repeat(ctx):
 async def repeatnum(ctx):
     embed = discord.Embed(title = "***repeatnum***", description = "View the remaining repetitions left on a selection.", color = 0xa09c9c)
     embed.add_field(name = "Syntax", value = "$repeatnum")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def lyrics(ctx):
+    embed = discord.Embed(title = "***lyrics***", description = "Get the lyrics of a specified selection in the queue (DEFAULT = 0).", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$lyrics <queue location>")
     embed.set_footer(text = "Vibe Bot")
     await ctx.send(embed = embed)
 
