@@ -678,6 +678,17 @@ class audioFunctions(commands.Cog):
 
     
 
+
+
+
+
+
+
+
+
+
+
+
     @commands.command(name = "lyrics", help = " - Get the lyrics of a specified selection in the queue.")
     @commands.has_role('Vibe Master')
     async def lyrics(self, ctx, locale = 0):
@@ -687,7 +698,7 @@ class audioFunctions(commands.Cog):
                 if ctx.guild.id not in multiServerQueue:
                     return await ctx.send("No selections in queue.")
                 else:
-                    if locale > len(multiServerQueue[ctx.guild.id]) or locale < 0:
+                    if locale > len(multiServerQueue[ctx.guild.id]) - 1 or locale < 0:
                         return await ctx.send("Specified index out of range.")
                     else:
                         name = multiServerQueue[ctx.guild.id][locale].get('title', None)
@@ -723,6 +734,45 @@ class audioFunctions(commands.Cog):
     async def lyrics_error(self, ctx, exc):
         if isinstance(exc, NoLyricsFound):
             await ctx.send("No lyrics could be found.")
+
+
+
+
+
+
+
+
+
+    
+    @commands.command(name="swapq", help=" - Switch two selections in the queue.")
+    @commands.has_role('Vibe Master')
+    async def swapq(self, ctx, locOne : int, locTwo : int):
+        if (ctx.author.voice):
+            if ctx.voice_client:
+                voice = ctx.guild.voice_client
+                if ctx.guild.id not in multiServerQueue:
+                    await ctx.send("Nothing in the current queue.")
+                else:
+                        if locOne > len(multiServerQueue[ctx.guild.id]) - 1 or locOne < 0 or locTwo > len(multiServerQueue[ctx.guild.id]) - 1 or locTwo < 0:
+                            return await ctx.send("Specified indices out of range.")
+                        else:
+                            temp = multiServerQueue[ctx.guild.id][locOne]
+                            multiServerQueue[ctx.guild.id][locOne] = multiServerQueue[ctx.guild.id][locTwo]
+                            multiServerQueue[ctx.guild.id][locTwo] = temp
+                            del(temp)
+
+                            if locOne == 0 or locTwo == 0:
+                                global SHUFFLE_COND 
+                                global REPEAT_NUM
+                                SHUFFLE_COND = 1 
+                                REPEAT_NUM = 0
+                                voice.stop()
+
+                            await ctx.send("***Selections swapped!*** :thumbsup:")
+            else:
+                await ctx.send("I am not connected to a voice channel.")
+        else:
+            await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
     
 
