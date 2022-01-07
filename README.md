@@ -167,6 +167,9 @@ Below is a list of all the current commands with descriptions.
 * lyrics
   * Description: Get the lyrics of a specified selection in the queue (DEFAULT = 0).
   * Syntax: ```$lyrics <queue location>```
+* swapq
+  * Description: Switch two selections in the queue.
+  * Syntax: ```$swapq <index of first selection> <index of second selection>```
 
 
 More commands are planned to be added soon! If you have any questions or suggestions feel free to message me on Twitter:
