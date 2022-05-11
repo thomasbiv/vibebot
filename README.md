@@ -104,6 +104,9 @@ Below is a list of all the current commands with descriptions.
 * purge
   * Description: Purges (clears) the last specified amount of messages (Default = 5).
   * Syntax: ```$purge <amount>```
+* poll
+  * Description: Create a new poll.
+  * Syntax: ```$poll <topic>```
 
 ### Audio Functions
 
