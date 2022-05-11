@@ -48,7 +48,7 @@ async def on_command_error(ctx, error):
 @bot.group(invoke_without_command = True)
 async def help(ctx):
     embed = discord.Embed(title = "***Help***", description = "For more information on a specific command, type $help <command>", color = 0xa09c9c)
-    embed.add_field(name = "Useful Functions", value = "roll | ping | eightball | purge", inline=False)
+    embed.add_field(name = "Useful Functions", value = "roll | ping | eightball | purge | poll", inline=False)
     embed.add_field(name = "Audio Functions", value = "youtube | join | leave | pause | resume | skipq | enq | delq | viewq | clear | play | playq | shuffleq | replay | playlist | currsong | moveto | repeat | repeatnum | lyrics | swapq", inline=False)
     embed.set_footer(text = "Vibe Bot")
     await ctx.send(embed = embed)
@@ -78,6 +78,13 @@ async def eightball(ctx):
 async def purge(ctx):
     embed = discord.Embed(title = "***purge***", description = "Purges (clears) the last specified amount of messages (Default = 5).", color = 0xa09c9c)
     embed.add_field(name = "Syntax", value = "$purge <amount>")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def poll(ctx):
+    embed = discord.Embed(title = "***poll***", description = "Create a new poll.", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$poll <topic>")
     embed.set_footer(text = "Vibe Bot")
     await ctx.send(embed = embed)
 

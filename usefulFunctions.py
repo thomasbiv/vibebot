@@ -57,6 +57,17 @@ class usefulFunctions(commands.Cog):
     async def purge(self, ctx, amount=5):
         await ctx.channel.purge(limit=amount)
 
+    
+    @commands.command(name='poll', help=" - Create a new poll")
+    @commands.has_role('Vibe Master')
+    async def poll(self, ctx, *, message):
+        await ctx.channel.purge(limit=1)
+        embed=discord.Embed(title = "***Poll***", description = f"{message}")
+        msg = await ctx.send(embed=embed)
+        await msg.add_reaction('👍')
+        await msg.add_reaction('👎')
+
+
 
 def setup(bot):
     bot.add_cog(usefulFunctions(bot))
