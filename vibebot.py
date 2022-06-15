@@ -49,7 +49,7 @@ async def on_command_error(ctx, error):
 async def help(ctx):
     embed = discord.Embed(title = "***Help***", description = "For more information on a specific command, type $help <command>", color = 0xa09c9c)
     embed.add_field(name = "Useful Functions", value = "roll | ping | eightball | purge | poll", inline=False)
-    embed.add_field(name = "Audio Functions", value = "youtube | join | leave | pause | resume | skipq | enq | delq | viewq | clear | play | playq | shuffleq | replay | playlist | currsong | moveto | repeat | repeatnum | lyrics | swapq", inline=False)
+    embed.add_field(name = "Audio Functions", value = "youtube | join | leave | pause | resume | skipq | enq | delq | viewq | clear | play | playq | shuffleq | replay | playlist | currsong | moveto | repeat | repeatnum | lyrics | swapq | playminecraft", inline=False)
     embed.set_footer(text = "Vibe Bot")
     await ctx.send(embed = embed)
 
@@ -162,6 +162,13 @@ async def clear(ctx):
 async def play(ctx):
     embed = discord.Embed(title = "***play***", description = "Play audio off of YouTube using keywords or url. Also adds to queue.", color = 0xa09c9c)
     embed.add_field(name = "Syntax", value = "$play <query or link>")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def playminecraft(ctx):
+    embed = discord.Embed(title = "***playminecraft***", description = "MINECRAFT : ).", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$playminecraft <query or link>")
     embed.set_footer(text = "Vibe Bot")
     await ctx.send(embed = embed)
 
