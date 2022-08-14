@@ -31,13 +31,6 @@ class audioFunctions(commands.Cog):
 
 
 
-
-
-
-
-
-
-
     @commands.command(name="youtube", help=" - Search for a YouTube video!")
     @commands.has_role('Vibe Master')
     async def youtube(self, ctx, *, search):
@@ -51,13 +44,6 @@ class audioFunctions(commands.Cog):
             r"watch\?v=(\S{11})", htm_content.read().decode())
         link = 'http://www.youtube.com/watch?v=' + search_results[0]
         await ctx.send(link)
-
-
-
-
-
-
-
 
 
 
@@ -85,13 +71,6 @@ class audioFunctions(commands.Cog):
 
 
 
-
-
-
-
-
-
-
     @commands.command(pass_context=True, name="leave", help=" - Have Vibe Bot leave your voice channel.")
     @commands.has_role('Vibe Master')
     async def leave(self, ctx):
@@ -106,12 +85,6 @@ class audioFunctions(commands.Cog):
                 await ctx.send("I am not in a voice channel.")
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
-
-
-
-
-
-
 
 
 
@@ -141,13 +114,6 @@ class audioFunctions(commands.Cog):
 
 
 
-
-
-
-
-
-
-
     @commands.command(pass_context=True, name="resume", help=" - Resume the current selection that is paused in the voice channel.")
     @commands.has_role('Vibe Master')
     async def resume(self, ctx):
@@ -166,13 +132,6 @@ class audioFunctions(commands.Cog):
                 await ctx.send("I am not connected to a voice channel.")
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
-
-
-
-
-
-
-
 
 
 
@@ -205,13 +164,6 @@ class audioFunctions(commands.Cog):
                 await ctx.send("I am not connected to a voice channel.")
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
-
-
-
-
-
-
-
 
 
 
@@ -253,13 +205,6 @@ class audioFunctions(commands.Cog):
 
 
 
-
-
-
-
-
-
-
     @commands.command(name="delq", help=" - Delete the specified selection in the queue.")
     @commands.has_role('Vibe Master')
     async def delq(self, ctx, number):
@@ -282,13 +227,6 @@ class audioFunctions(commands.Cog):
                 await ctx.send("I am not connected to a voice channel.")
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
-
-
-
-
-
-
-
 
 
 
@@ -332,13 +270,6 @@ class audioFunctions(commands.Cog):
 
 
 
-
-
-
-
-
-
-
     @commands.command(name="clear", help=" - Stop the current selection being played and clears the queue.")
     @commands.has_role('Vibe Master')
     async def clear(self, ctx):
@@ -363,13 +294,6 @@ class audioFunctions(commands.Cog):
                 await ctx.send("I am not connected to a voice channel.")
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
-
-
-
-
-
-
-
 
 
 
@@ -413,13 +337,6 @@ class audioFunctions(commands.Cog):
 
 
 
-
-
-
-
-
-
-
     @commands.command(name="playminecraft", help=" - MINECRAFT : ).")
     @commands.has_role('Vibe Master')
     async def playminecraft(self, ctx, *, search):
@@ -458,13 +375,6 @@ class audioFunctions(commands.Cog):
 
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
-
-
-
-
-
-
-
 
 
 
@@ -518,14 +428,6 @@ class audioFunctions(commands.Cog):
             
 
 
-
-
-
-
-
-
-
-
     @commands.command(name="playq", help=" - Play the current queue.")
     @commands.has_role('Vibe Master')
     async def playq(self, ctx):
@@ -573,14 +475,6 @@ class audioFunctions(commands.Cog):
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
 
-            
-
-
-
-
-
-
-
 
     @commands.command(name="shuffleq", help=" - Shuffle the current queue.")
     @commands.has_role('Vibe Master')
@@ -612,14 +506,6 @@ class audioFunctions(commands.Cog):
 
 
 
-
-
-
-
-
-
-
-
     @commands.command(name="replay", help=" - Restart the current selection from the beginning.")
     @commands.has_role('Vibe Master')
     async def restart(self, ctx):
@@ -642,13 +528,6 @@ class audioFunctions(commands.Cog):
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
     
-    
-    
-
-
-
-
-
 
     @commands.command(name="currsong", help=" - View the name of the current selection.")
     @commands.has_role('Vibe Master')
@@ -664,14 +543,6 @@ class audioFunctions(commands.Cog):
                 await ctx.send("I am not connected to a voice channel.")
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
-
-    
-
-
-
-
-
-
 
 
 
@@ -715,13 +586,6 @@ class audioFunctions(commands.Cog):
 
 
 
-
-
-
-
-
-
-
     @commands.command(name="repeat", help=" - Repeat the current selection a given amount of times (DEFAULT/MAX = 20).")
     @commands.has_role('Vibe Master')
     async def repeat(self, ctx, num : int = 20):
@@ -749,13 +613,6 @@ class audioFunctions(commands.Cog):
 
 
 
-
-
-
-
-
-
-
     @commands.command(name="repeatnum", help=" - View the remaining repetitions left on a selection.")
     @commands.has_role('Vibe Master')
     async def repeatnum(self, ctx):
@@ -773,17 +630,6 @@ class audioFunctions(commands.Cog):
                 await ctx.send("I am not connected to a voice channel.")
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
-
-    
-
-
-
-
-
-
-
-
-
 
 
 
@@ -825,20 +671,12 @@ class audioFunctions(commands.Cog):
         else:
             return await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
-    
 
 
     @lyrics.error
     async def lyrics_error(self, ctx, exc):
         if isinstance(exc, NoLyricsFound):
             await ctx.send("No lyrics could be found.")
-
-
-
-
-
-
-
 
 
     
@@ -875,11 +713,6 @@ class audioFunctions(commands.Cog):
         else:
             await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
-    
-
-    
-
-            
 
 
 def setup(bot):
