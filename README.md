@@ -176,7 +176,7 @@ Below is a list of all the current commands with descriptions.
   
 ### NOTE:
 
-Because Vibe Bot accesses YouTube with no account logged in, age-restricted videos cannot be played in voice chats. If Vibe Bot is queried to play a video with an age-restriction, the bot will join and immediately idle. An update is in the works to correct this by preventing the bot from joining a voice chat if it detects age-restricted content.
+Because Vibe Bot accesses YouTube with no account logged in, age-restricted videos cannot be played in voice chats. If Vibe Bot is queried to play a video with an age-restriction, the bot will join and immediately idle. An update is in the works to correct this by skipping the newly enqueued selection if the bot detects age-restricted content.
 
 
 More commands are planned to be added soon! If you have any questions or suggestions feel free to message me on Twitter:
