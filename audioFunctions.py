@@ -11,7 +11,7 @@ import re
 import youtube_dl
 import random
 import json
-import os
+from os import path
 import queue
 import copy
 import typing as t
@@ -647,6 +647,135 @@ class audioFunctions(commands.Cog):
                         await ctx.send("***Selections swapped!*** :thumbsup:")
 
 
+    @commands.command(name="cpl", help=" - Create a new playlist.")
+    @commands.has_role('Vibe Master')
+    async def pl_create(self, ctx, playlistname : str):
+        userfile = "./playlists/"  + str(ctx.author) + ".json"
+        if not path.exists(userfile):
+            data_begin = {"Playlists" : {playlistname: []}}
+            with open(userfile, "w") as write_file:
+                json.dump(data_begin, write_file)
+                await ctx.send("***Playlist file created for " + str(ctx.author) + " containing one playlist named " + str(playlistname) + "!***")
+        else:
+            with open(userfile, "r+") as read_file:
+                data = json.load(read_file)
+                if playlistname in data["Playlists"]:
+                    await ctx.send("Playlist with this name already exists.")
+                else:
+                    data["Playlists"].update({playlistname: []})
+                    read_file.seek(0)
+                    json.dump(data, read_file)
+                    await ctx.send("***Playlist named " + str(playlistname) + " created for " + str(ctx.author) + "!***")
+
+
+    @commands.command(name="vplall", help=" - View all of your playlists.")
+    @commands.has_role('Vibe Master')
+    async def pl_listall(self, ctx, page_num=1):
+        userfile = "./playlists/"  + str(ctx.author) + ".json"
+        embed = discord.Embed(color=0xa09c9c)
+        if path.exists(userfile):
+            with open(userfile, "r") as read_file:
+                data = json.load(read_file)
+                real_num = page_num - 1
+                pl_pages = []
+                page = []
+                k = 1
+                for playlist in data["Playlists"]:
+                    page.append(playlist)
+                    if k % 10 == 0:
+                        temp = page.copy()
+                        pl_pages.append(temp)
+                        page.clear()
+                    elif (k == len(data["Playlists"])) and (k % 10 != 0):
+                        pl_pages.append(page)
+                    k = k + 1
+
+                if (page_num > len(pl_pages)) or (page_num <= 0):
+                    return await ctx.send("Invalid page number. There are currently " + str(len(pl_pages)) + " page(s) worth of data.")
+
+                embed.title = "***" + str(ctx.author) + "'s Playlists***"
+                key = page_num - 1
+                for j in range(len(pl_pages[real_num])):
+                    if page_num == 1:
+                        embed.add_field(name=str(j + 1) + ". ", value=pl_pages[real_num][j], inline=False)
+                    else:
+                        embed.add_field(name=str(key) + str(j + 1) + ". ", value=pl_pages[real_num][j], inline=False)
+
+                embed.set_footer(text="Page " + str(page_num) +"/" + str(len(pl_pages)))
+                await ctx.send(embed=embed)
+        else:
+            await ctx.send("You haven't made any playlists!")
+
+
+    @commands.command(name="apl", help=" - Add to an existing playlist.")
+    @commands.has_role('Vibe Master')
+    async def pl_add(self, ctx, playlistindex : int, songnameartist):
+        userfile = "./playlists/"  + str(ctx.author) + ".json"
+        if path.exists(userfile):
+            with open(userfile,"r+") as read_file: 	
+                data = json.load(read_file)
+                try:
+                    i = 0
+                    appended = False
+                    for playlist in data["Playlists"]:
+                        if i == playlistindex - 1:
+                            target = playlist
+                            data["Playlists"][str(target)].append(songnameartist)
+                            appended = True
+                        i = i + 1
+                    if appended == False:
+                        return await ctx.send("The requested playlist does not exist.")
+                    #data["Playlists"][target].append(songnameartist)
+                    read_file.seek(0)
+                    json.dump(data, read_file, indent=1)
+                    await ctx.send("***Song added to " + str(ctx.author) + "'s playlist: " + str(data["Playlists"][target]) + "!***")
+                except:
+                    await ctx.send("An error has occurred, please try again.")
+        else:
+            await ctx.send("You haven't made any playlists!")
+
+
+    @commands.command(name="vpl", help=" - View a playlist.")
+    @commands.has_role('Vibe Master')
+    async def pl_list(self, ctx, playlistname : str, page_num : int = 1):
+        userfile = "./playlists/"  + str(ctx.author) + ".json"
+        embed = discord.Embed(color=0xa09c9c)
+        if path.exists(userfile):
+            with open(userfile, "r") as read_file:
+                data = json.load(read_file)
+                real_num = page_num - 1
+                song_pages = []
+                page = []
+                k = 1
+                try:
+                    for song in data["Playlists"][str(playlistname)]:
+                        page.append(song)
+                        if k % 10 == 0:
+                            temp = page.copy()
+                            song_pages.append(temp)
+                            page.clear()
+                        elif (k == len(data["Playlists"][str(playlistname)])) and (k % 10 != 0):
+                            song_pages.append(page)
+                        k = k + 1
+
+                    if (page_num > len(song_pages)) or (page_num <= 0):
+                        return await ctx.send("Invalid page number. There are currently " + str(len(song_pages)) + " page(s) worth of songs in this playlist.")
+
+                    embed.title = "***" + str(playlistname) + "'s Songs***"
+                    key = page_num - 1
+                    for j in range(len(song_pages[real_num])):
+                        if page_num == 1:
+                            embed.add_field(name=str(j + 1) + ". ", value=song_pages[real_num][j], inline=False)
+                        else:
+                            embed.add_field(name=str(key) + str(j + 1) + ". ", value=song_pages[real_num][j], inline=False)
+
+                    embed.set_footer(text="Page " + str(page_num) +"/" + str(len(song_pages)))
+                    await ctx.send(embed=embed)
+                except:
+                    await ctx.send("Playlist of this name could not be retrieved.")
+        else:
+            await ctx.send("You haven't made any playlists!")
+    
 
 def setup(bot):
     bot.add_cog(audioFunctions(bot))
