@@ -777,5 +777,32 @@ class audioFunctions(commands.Cog):
             await ctx.send("You haven't made any playlists!")
     
 
+    @commands.command(name="dspl", help=" - Delete a song from a playlist.")
+    @commands.has_role('Vibe Master')
+    async def pl_delsong(self, ctx, songindex : int, playlistname : str):
+        userfile = "./playlists/"  + str(ctx.author) + ".json"
+        if path.exists(userfile):
+            with open(userfile,"r+") as read_file: 	
+                data = json.load(read_file)
+                try:
+                    sentinel = False
+                    i = 0
+                    for song in data["Playlists"][playlistname]:
+                        if i == songindex - 1:
+                            del(data["Playlists"][playlistname][int(i)])
+                            sentinel = True
+                        i = i + 1
+                    if sentinel == False:
+                        return await ctx.send("The requested song index is out of range.")
+                    read_file.seek(0)
+                    json.dump(data, read_file, indent=1)
+                    read_file.truncate() #Use in the case of the new data smaller than past data to eliminate any overlapping trash data.
+                    await ctx.send("***Selected song has been removed!***")
+                except:
+                   await ctx.send("The requested playlist does not exist.")
+        else:
+            await ctx.send("You haven't made any playlists!")
+
+
 def setup(bot):
     bot.add_cog(audioFunctions(bot))

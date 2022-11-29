@@ -49,7 +49,7 @@ async def on_command_error(ctx, error):
 async def help(ctx):
     embed = discord.Embed(title = "***Help***", description = "For more information on a specific command, type $help <command>", color = 0xa09c9c)
     embed.add_field(name = "Useful Functions", value = "roll | ping | eightball | purge | poll", inline=False)
-    embed.add_field(name = "Audio Functions", value = "youtube | join | leave | pause | resume | skipq | enq | delq | viewq | clear | play | playq | shuffleq | replay | playlist | currsong | moveto | repeat | repeatnum | lyrics | swapq | playminecraft | cpl | vplall | apl | vpl", inline=False)
+    embed.add_field(name = "Audio Functions", value = "youtube | join | leave | pause | resume | skipq | enq | delq | viewq | clear | play | playq | shuffleq | replay | playlist | currsong | moveto | repeat | repeatnum | lyrics | swapq | playminecraft | cpl | vplall | apl | vpl | dspl", inline=False)
     embed.set_footer(text = "Vibe Bot")
     await ctx.send(embed = embed)
 
@@ -259,7 +259,7 @@ async def vplall(ctx):
 @help.command()
 async def apl(ctx):
     embed = discord.Embed(title = "***apl***", description = "Add to an existing playlist using the playlist's index.", color = 0xa09c9c)
-    embed.add_field(name = "Syntax", value = "$apl <playlist index (retrieved from $vpl)> <song name and artist in quotes>")
+    embed.add_field(name = "Syntax", value = "$apl <playlist index (retrieved from $vplall)> <song name and artist in quotes>")
     embed.set_footer(text = "Vibe Bot")
     await ctx.send(embed = embed)
 
@@ -267,6 +267,13 @@ async def apl(ctx):
 async def vpl(ctx):
     embed = discord.Embed(title = "***vpl***", description = "View a playlist.", color = 0xa09c9c)
     embed.add_field(name = "Syntax", value = "$vpl <playlist name> <page number (DEFAULT = 1)>")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def dspl(ctx):
+    embed = discord.Embed(title = "***dspl***", description = "Delete a song from a playlist.", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$dspl <song index (retrieved from $vpl)> <playlistname>")
     embed.set_footer(text = "Vibe Bot")
     await ctx.send(embed = embed)
 
