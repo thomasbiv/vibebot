@@ -647,6 +647,7 @@ class audioFunctions(commands.Cog):
                         await ctx.send("***Selections swapped!*** :thumbsup:")
 
 
+
     @commands.command(name="cpl", help=" - Create a new playlist.")
     @commands.has_role('Vibe Master')
     async def pl_create(self, ctx, playlistname : str):
@@ -657,15 +658,16 @@ class audioFunctions(commands.Cog):
                 json.dump(data_begin, write_file)
                 await ctx.send("***Playlist file created for " + str(ctx.author) + " containing one playlist named " + str(playlistname) + "!***")
         else:
-            with open(userfile, "r+") as read_file:
+            with open(userfile, "r") as read_file:
                 data = json.load(read_file)
-                if playlistname in data["Playlists"]:
-                    await ctx.send("Playlist with this name already exists.")
-                else:
-                    data["Playlists"].update({playlistname: []})
-                    read_file.seek(0)
-                    json.dump(data, read_file)
+            if playlistname in data["Playlists"]:
+                return await ctx.send("Playlist with this name already exists.")
+            else:
+                data["Playlists"].update({playlistname: []})
+                with open(userfile, "w") as write_file:
+                    json.dump(data, write_file)
                     await ctx.send("***Playlist named " + str(playlistname) + " created for " + str(ctx.author) + "!***")
+                
 
 
     @commands.command(name="vplall", help=" - View all of your playlists.")
@@ -707,6 +709,7 @@ class audioFunctions(commands.Cog):
             await ctx.send("You haven't made any playlists!")
 
 
+
     @commands.command(name="apl", help=" - Add to an existing playlist.")
     @commands.has_role('Vibe Master')
     async def pl_add(self, ctx, playlistindex : int, songnameartist):
@@ -733,6 +736,7 @@ class audioFunctions(commands.Cog):
                     await ctx.send("An error has occurred, please try again.")
         else:
             await ctx.send("You haven't made any playlists!")
+
 
 
     @commands.command(name="vpl", help=" - View a playlist.")
@@ -777,6 +781,7 @@ class audioFunctions(commands.Cog):
             await ctx.send("You haven't made any playlists!")
     
 
+
     @commands.command(name="dspl", help=" - Delete a song from a playlist.")
     @commands.has_role('Vibe Master')
     async def pl_delsong(self, ctx, songindex : int, playlistname : str):
@@ -798,6 +803,26 @@ class audioFunctions(commands.Cog):
                     json.dump(data, read_file, indent=1)
                     read_file.truncate() #Use in the case of the new data smaller than past data to eliminate any overlapping trash data.
                     await ctx.send("***Selected song has been removed!***")
+                except:
+                   await ctx.send("The requested playlist does not exist.")
+        else:
+            await ctx.send("You haven't made any playlists!")
+
+
+
+    @commands.command(name="dpl", help=" - Delete an entire playlist.")
+    @commands.has_role('Vibe Master')
+    async def pl_del(self, ctx, playlistname : str):
+        userfile = "./playlists/"  + str(ctx.author) + ".json"
+        if path.exists(userfile):
+            with open(userfile,"r+") as read_file: 	
+                data = json.load(read_file)
+                try:
+                    del(data["Playlists"][playlistname])
+                    read_file.seek(0)
+                    json.dump(data, read_file, indent=1)
+                    read_file.truncate() #Use in the case of the new data smaller than past data to eliminate any overlapping trash data.
+                    await ctx.send("***Selected playlist has been removed!***")
                 except:
                    await ctx.send("The requested playlist does not exist.")
         else:
