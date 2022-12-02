@@ -828,6 +828,73 @@ class audioFunctions(commands.Cog):
         else:
             await ctx.send("You haven't made any playlists!")
 
+    
+
+    @commands.command(name="clpl", help=" - Clear your entire playlist file.")
+    @commands.has_role('Vibe Master')
+    async def pl_clear(self, ctx):
+        userfile = "./playlists/"  + str(ctx.author) + ".json"
+        if path.exists(userfile):
+            with open(userfile, "r+") as read_file:
+                data = json.load(read_file)
+                try:
+                    data["Playlists"].clear()
+                    read_file.seek(0)
+                    json.dump(data, read_file, indent=1)
+                    read_file.truncate() #Use in the case of the new data smaller than past data to eliminate any overlapping trash data.
+                    await ctx.send("***All playlists have been deleted!***")
+                except:
+                    await ctx.send("An error as occurred.")
+        else:
+            await ctx.send("This playlist file does not exist. Create a new file first.")
+
+
+
+    @commands.command(name="lpl", help=" - Load a playlist into the queue.")
+    @commands.has_role('Vibe Master')
+    async def pl_load(self, ctx, playlistname : str):
+        if (ctx.author.voice):
+            userfile = "./playlists/"  + str(ctx.author) + ".json"
+            if path.exists(userfile):
+                with open(userfile, "r+") as read_file:
+                    data = json.load(read_file)
+                    for song in data["Playlists"][str(playlistname)]:
+                        query_string = urllib.parse.urlencode({
+                        'search_query': str(song)
+                        })
+                        htm_content = urllib.request.urlopen(
+                            'http://www.youtube.com/results?' + query_string
+                        )
+                        search_results = re.findall(
+                            r"watch\?v=(\S{11})", htm_content.read().decode())
+                        url = 'http://www.youtube.com/watch?v=' + search_results[0]
+                        if (ctx.author.voice):
+                            if ctx.guild.id not in multiServerQueue:
+                                multiServerQueue[ctx.guild.id] = []
+                            if not (ctx.voice_client):
+                                channel = ctx.message.author.voice.channel
+                                voice = await channel.connect()
+                            else:
+                                voice = ctx.guild.voice_client
+                            ydl_opts = {
+                                'quiet': True,
+                                'skip_download': True,
+                                'dump_single_json': True,
+                                'extract_flat': True
+                            }
+                            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                                info = ydl.extract_info(url)
+
+                            multiServerQueue[ctx.guild.id].append(
+                                {'url': info['formats'][0]['url'], 'title': info['title'], 'from_playlist': False})
+                    await ctx.send('***Selections added to queue!*** :ok_hand:')
+                    await ctx.send('***The queue now contains ' + str(len(multiServerQueue[ctx.guild.id])) + ' selection(s)!***')
+                    temp = self.bot.get_command(name='playq')
+                    return await temp.callback(self, ctx)
+            else:
+                await ctx.send("This playlist file does not exist. Create a new file first.")
+        else:
+            await ctx.send("You are not in a voice channel, you must be in a voice channel to run this command.")
 
 def setup(bot):
     bot.add_cog(audioFunctions(bot))
