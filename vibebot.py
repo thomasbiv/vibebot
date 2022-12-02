@@ -49,7 +49,7 @@ async def on_command_error(ctx, error):
 async def help(ctx):
     embed = discord.Embed(title = "***Help***", description = "For more information on a specific command, type $help <command>", color = 0xa09c9c)
     embed.add_field(name = "Useful Functions", value = "roll | ping | eightball | purge | poll", inline=False)
-    embed.add_field(name = "Audio Functions", value = "youtube | join | leave | pause | resume | skipq | enq | delq | viewq | clear | play | playq | shuffleq | replay | playlist | currsong | moveto | repeat | repeatnum | lyrics | swapq | playminecraft", inline=False)
+    embed.add_field(name = "Audio Functions", value = "youtube | join | leave | pause | resume | skipq | enq | delq | viewq | clear | play | playq | shuffleq | replay | playlist | currsong | moveto | repeat | repeatnum | lyrics | swapq | playminecraft | cpl | vplall | apl | vpl | dspl | dpl | clpl | lpl", inline=False)
     embed.set_footer(text = "Vibe Bot")
     await ctx.send(embed = embed)
 
@@ -239,6 +239,62 @@ async def lyrics(ctx):
 async def swapq(ctx):
     embed = discord.Embed(title = "***swapq***", description = "Switch two selections in the queue.", color = 0xa09c9c)
     embed.add_field(name = "Syntax", value = "$swapq <index of first selection> <index of second selection>")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def cpl(ctx):
+    embed = discord.Embed(title = "***cpl***", description = "Create a new playlist.", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$cpl <name of playlist (one word)>")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def vplall(ctx):
+    embed = discord.Embed(title = "***vplall***", description = "View all of your playlists.", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$lpl <page number (DEFAULT = 1)>")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def apl(ctx):
+    embed = discord.Embed(title = "***apl***", description = "Add to an existing playlist using the playlist's index.", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$apl <playlist index (retrieved from $vplall)> <song name and artist in quotes>")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def vpl(ctx):
+    embed = discord.Embed(title = "***vpl***", description = "View a playlist.", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$vpl <playlist name> <page number (DEFAULT = 1)>")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def dspl(ctx):
+    embed = discord.Embed(title = "***dspl***", description = "Delete a song from a playlist.", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$dspl <song index (retrieved from $vpl)> <playlistname>")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def dpl(ctx):
+    embed = discord.Embed(title = "***dpl***", description = "Delete an entire playlist.", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$dpl <playlistname>")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def clpl(ctx):
+    embed = discord.Embed(title = "***clpl***", description = "Clear your entire playlist file.", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$clpl")
+    embed.set_footer(text = "Vibe Bot")
+    await ctx.send(embed = embed)
+
+@help.command()
+async def lpl(ctx):
+    embed = discord.Embed(title = "***lpl***", description = "Load a playlist into the queue.", color = 0xa09c9c)
+    embed.add_field(name = "Syntax", value = "$lpl <playlistname>")
     embed.set_footer(text = "Vibe Bot")
     await ctx.send(embed = embed)
 
