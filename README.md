@@ -173,6 +173,30 @@ Below is a list of all the current commands with descriptions.
 * swapq
   * Description: Switch two selections in the queue.
   * Syntax: ```$swapq <index of first selection> <index of second selection>```
+* cpl
+  * Description: Create a new playlist.
+  * Syntax: ```$cpl <name of playlist (one word)>```
+* vplall
+  * Description: View all of your playlists.
+  * Syntax: ```$vplall <page number (DEFAULT = 1)>```
+* apl
+  * Description: Add to an existing playlist using the playlist's index.
+  * Syntax: ```$apl <playlist index (retrieved from $vplall)> <song name and artist in quotes>```
+* vpl
+  * Description: View a playlist.
+  * Syntax: ```$vpl <playlist name> <page number (DEFAULT = 1)>```
+* dspl
+  * Description: Delete a song from a playlist.
+  * Syntax: ```$dspl <song index (retrieved from $vpl)> <playlistname>```
+* dpl
+  * Description: Delete an entire playlist.
+  * Syntax: ```$dpl <playlistname>```
+* clpl
+  * Description: Clear your entire playlist file.
+  * Syntax: ```$clpl```
+* lpl
+  * Description: Load a playlist into the queue.
+  * Syntax: ```$lpl <playlistname>```
   
 ### NOTE:
 
