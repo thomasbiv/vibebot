@@ -252,7 +252,7 @@ async def cpl(ctx):
 @help.command()
 async def vplall(ctx):
     embed = discord.Embed(title = "***vplall***", description = "View all of your playlists.", color = 0xa09c9c)
-    embed.add_field(name = "Syntax", value = "$lpl <page number (DEFAULT = 1)>")
+    embed.add_field(name = "Syntax", value = "$vplall <page number (DEFAULT = 1)>")
     embed.set_footer(text = "Vibe Bot")
     await ctx.send(embed = embed)
 
