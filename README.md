@@ -39,10 +39,10 @@ If software and build information appears on the command window, FFmpeg was succ
 
 Once Python3 is installed, the proper libraries to run the bot must be installed as well. For the next few installs, open your command window by again typing ```cmd``` in the Windows search bar. 
 
-First, you'll need to pick up discord.py. Type or copy/paste this line into the command window:
+First, you'll need to pick up discord.py, specifically version 1.7.3. Type or copy/paste this line into the command window:
 
 ```
-pip install discord.py
+pip install discord.py==1.7.3
 ```
 
 For a more customized experience or for additional help, the full discord.py documentation can be found [here.](https://discordpy.readthedocs.io/en/stable/)
