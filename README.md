@@ -209,7 +209,7 @@ More commands are planned to be added soon! If you have any questions or suggest
 
 Thomas Bivins
 
-[@thomasbiv](https://twitter.com/thomasbiv)
+[bivinsthomas@gmail.com](mailto:bivinsthomas@gmail.com)
 
 USF Computer Engineering
 
