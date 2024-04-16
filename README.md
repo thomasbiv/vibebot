@@ -50,7 +50,7 @@ For a more customized experience or for additional help, the full discord.py doc
 Second, youtube-dl will need to be installed. Type or copy/paste this line into the command window:
 
 ```
--m pip install -U youtube_dl
+pip install youtube_dl
 ```
 
 For a more customized experience or for additional help, the full youtube_dl documentation can be found [here.](https://youtube-dl.readthedocs.io/en/latest/)
